@@ -1,5 +1,6 @@
 
 
+import os
 import setuptools
 
 
@@ -8,7 +9,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="glasswall-aws-product-test-automation",
-    version="0.0.71",
+    version="0.0.72",
     author="AngusWR",
     author_email="aroberts@glasswallsolutions.com",
     description="A small package for testing Glasswall AWS products",
@@ -16,7 +17,10 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/filetrust/aws-product-test-automation",
     packages=["s93_test_automation"],
-    package_data={"s93_test_automation": "s93_test_automation/data/**"},
+    data_files=[
+        (root, [os.path.join(root, f) for f in files])
+        for root, dirs, files in os.walk(os.path.join("s93_test_automation", "data"))
+    ],
     entry_points={
         "console_scripts": [
             "s93_test_automation = s93_test_automation.__main__:main",
