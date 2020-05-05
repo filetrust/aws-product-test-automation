@@ -1,0 +1,101 @@
+Initial Iteration Tests
+
+1-Test_File upload using base64 code & less than 6mb with valid x-api key is successful
+	Execution Steps:
+		Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/base64' with valid x-api key
+	Expected Results:
+	The response is returned with the processed file & success code 200
+	
+--------------------------------------------------------------------------------------------------------------------------
+
+2-Test_Accurate error returned for a over 6mb file upload using base64 code with valid x-api key
+	Execution Steps:
+		Post file over 6mb payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/base64' with valid x-api key
+	Expected Results:
+	The response message 'Paylod Too Large' is returned with error code 413
+--------------------------------------------------------------------------------------------------------------------------
+
+3-Test_File upload using base64 code & less than 6mb with invalid x-api key is unsuccessful
+	Execution Steps:
+		Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/base64' with invalid x-api key
+	Expected Results:
+	The response message 'Forbidden' is returned with error code '403'
+--------------------------------------------------------------------------------------------------------------------------
+4-Test_The default cmp policy is applied to uploadted file using base64 code
+	Execution Steps:
+		Set cmp policy for file type as 'cmptype'
+		Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/base64' with valid x-api key
+	Expected Results:
+	The response is returned with success code '200'
+		If cmpType is 'Sanitise', Then the file is returned sanitised
+		If cmpType is 'Allow', Then the file is allowed & the original file is returned
+		If cmpType is 'Disallow', Then the file is disallowed & held file report is returned
+
+--------------------------------------------------------------------------------------------------------------------------
+5-Test_File upload using pre-signed url with valid x-api key is successful
+	Execution Steps:
+		Post a payload request with file url to endpoint: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+	Expected Results:
+	The response is returned with the processed file and success code 200
+--------------------------------------------------------------------------------------------------------------------------
+
+6-Test_File upload using pre-signed url with invalid x-api key is unsuccessful
+	Execution Steps:
+		Post a payload request with file url: to endpoint:'[API GATEWAY URL]/api/Rebuild/sas' with invalid x-api key
+	Expected Results:
+	The response message 'Forbidden' is returned with error code '403'
+
+--------------------------------------------------------------------------------------------------------------------------	
+7-Test_The default cmp policy is applied to uploadted file using pre-signed url
+	Execution Steps:
+		Set cmp policy for file type as 'cmptype'
+		Post a payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+	Expected Results:
+	The response is returned with status code '200'
+		If cmpType is 'Sanitise', Then the file is returned sanitised
+		If cmpType is 'Allow', Then the file is allowed & the original file is returned
+		If cmpType is 'Disallow', Then the file is disallowed & held file report is returned
+
+--------------------------------------------------------------------------------------------------------------------------
+8-Test_Accurate error returned for post of a file bigger than using pre-signed url with valid x-api key
+	Execution Steps:
+		Post a file url over '' payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/base64' with valid x-api key
+	Expected Results:
+	The response message '' is returned with error code '' 
+--------------------------------------------------------------------------------------------------------------------------
+
+9-Test_unsupported file upload using pre-signed url with valid x-api key is unsuccessful
+	Execution Steps:
+		Post a payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+	Expected Results:
+	The response message 'Unprocessable Entity' is returned with error code '422'
+
+--------------------------------------------------------------------------------------------------------------------------
+10-Test_unsupported file upload using base64 code & less than 6mb with valid x-api key is unsuccessful
+	Execution Steps:
+		Post a unsupported file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/base64' with valid x-api key
+	Expected Results:
+	The response message 'Unprocessable Entity' is returned with error code '422'
+
+--------------------------------------------------------------------------------------------------------------------------
+11-Test_upload of files with issues and or malware using pre-signed url with valid x-api key 
+	Execution Steps:
+		Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+		Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+		Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+	Expected Results:
+	The response message returned for file containing malware is:'Unprocessable Entity' with error code '422'
+	The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
+	The response message returned for file containing malware is: 'Unprocessable Entity' with error code '422'
+	
+--------------------------------------------------------------------------------------------------------------------------
+12-Test_upload of files with issues and or malware using base64 code with valid x-api key 
+	Execution Steps:
+		Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/base64' with valid x-api key
+		Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/base64' with valid x-api key
+		Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/base64' with valid x-api key
+	Expected Results:
+	The response message returned for file containing malware is:'OK' with success code '200'
+	The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
+	The response message returned for file containing malware is: 'Unprocessable Entity' with error code '422'
+	

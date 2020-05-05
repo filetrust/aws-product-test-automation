@@ -1,0 +1,57 @@
+Critical Paths_File Type Detect:
+
+1-Test_file(base 64) upload with valid x-api key to endpoint: /api/filetypedetection/base64
+	Execution Steps:
+		Post a file(base 64) payload request to endpoint: '[API GATEWAY URL]/api/filetypedetection/base64' with valid x-api key
+	Expected Results:
+		The file details: FileType,FileTypeName,FileSize return with success code 200
+
+2-Test_url file upload with valid x-api key to endpoint: /api/filetypedetection/sas
+	Execution Steps:
+		Post a pre-signed url file payload request to endpoint: '[API GATEWAY URL]/api/filetypedetection/sas' with a valid x-api key
+	Expected Results:
+		The file details: FileType,FileTypeName,FileSize return with success code 200
+
+3-Test_file(base 64) upload with invalid or no x-api key to endpoint: /api/filetypedetection/base64
+	Execution Steps:
+		Post a clean file(base 64) payload request to endpoint: '[API GATEWAY URL]/api/filetypedetection/base64' with invalid x-api key
+	Expected Results:
+		The error message 'Forbidden' is returned with status code 403
+		
+4-Test_url file upload with invalid or no x-api key to endpoint: /api/filetypedetection/sas
+	Execution Steps:
+		Post a pre-signed url file payload request to endpoint: '[API GATEWAY URL]/api/filetypedetection/sas' with a valid x-api key
+	Expected Results:
+		The error message 'Forbidden' is returned with status code 403
+
+5-Test_maximum file(base 64) size upload with valid x-api key to endpoint: /api/filetypedetection/base64
+	Execution Steps:
+		Post a over 10mb file(base 64) payload request to endpoint: '[API GATEWAY URL]/api/filetypedetection/base64' with invalid x-api key
+	Expected Results:
+		The error message 'Bad Request' is returned with status code 400
+
+6-Test_maximum size url file upload with valid x-api key to endpoint: /api/filetypedetection/sas
+	Execution Steps:
+		Post a over 10mb pre-signed url file payload request to endpoint: '[API GATEWAY URL]/api/filetypedetection/sas' with a valid x-api key
+	Expected Results:
+		The error message 'Bad Request' is returned with status code 400
+
+7-Test_upload of a non regenerated file(base 64) with valid x-api key to endpoint:  /api/filetypedetection/base64
+	Execution Steps:
+		Post a file(base 64) payload request to endpoint: '[API GATEWAY URL]/api/filetypedetection/base64' with a valid x-api key
+	Expected Results:
+		The file details: FileType,FileTypeName,FileSize return with success code 200
+
+8-Test_url upload of a non regenerated file with valid x-api key to endpoint: /api/filetypedetection/sas
+	Execution Steps:
+		Post a pre-signed url file payload request to endpoint: '[API GATEWAY URL]/api/filetypedetection/sas' with a valid x-api key
+	Expected Results:
+		The file details: FileType,FileTypeName,FileSize return with success code 200
+
+9-Test_incorrect format file upload 
+	Execution Steps:
+		Post a file payload request in non json format to any endpoint with a valid x-api key
+	Expected Results:
+		The error message 'Unsupported Media Type' is returned with status code 415
+
+

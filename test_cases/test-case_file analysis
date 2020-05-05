@@ -1,0 +1,59 @@
+Critical paths_File Analysis:
+
+1-Test_file(base 64) upload with valid x-api key to endpoint: /api/Analyse/base64
+	Execution Steps:
+		Post a clean file(base 64) payload request to endpoint: '[API GATEWAY URL]/api/Analyse/base64' with valid x-api key
+	Expected Results:
+		The response is returned with the XML analysis report & success code 200
+
+2-Test_url file upload with valid x-api key to endpoint: /api/Analyse/sas
+	Execution Steps:
+		Post a pre-signed url file payload request to endpoint: '[API GATEWAY URL]/api/Analyse/sas' with a valid x-api key
+	Expected Results:
+		The response is returned with the XML analysis report & success code 200
+
+3-Test_file(base 64) upload with invalid x-api key to endpoint: /api/Analyse/base64
+	Execution Steps:
+		Post a clean file(base 64) payload request to endpoint: '[API GATEWAY URL]/api/Analyse/base64' with invalid x-api key
+	Expected Results:
+		The error message 'Forbidden' is returned with status code 403
+		
+4-Test_url file upload with invalid x-api key to endpoint: /api/Analyse/sas
+	Execution Steps:
+		Post a pre-signed url file payload request to endpoint: '[API GATEWAY URL]/api/Analyse/sas' with a valid x-api key
+	Expected Results:
+		The error message 'Forbidden' is returned with status code 403
+
+5-Test_maximum file(base 64) size upload with valid x-api key to endpoint: /api/Analyse/base64
+	Execution Steps:
+		Post a over 10mb file(base 64) payload request to endpoint: '[API GATEWAY URL]/api/Analyse/base64' with invalid x-api key
+	Expected Results:
+		The error message 'Bad Request' is returned with status code 400
+
+6-Test_maximum size url file upload with valid x-api key to endpoint: /api/Analyse/sas
+	Execution Steps:
+		Post a over 10mb pre-signed url file payload request to endpoint: '[API GATEWAY URL]/api/Analyse/sas' with a valid x-api key
+	Expected Results:
+		The error message 'Bad Request' is returned with status code 400
+
+7-Test_url upload of a non regenerated file with valid x-api key to endpoint: /api/Analyse/sas
+	Execution Steps:
+		Post a pre-signed url file payload request to endpoint: '[API GATEWAY URL]/api/Analyse/sas' with a valid x-api key
+	Expected Results:
+		The error message 'Bad Request' is returned with status code 400
+
+8-Test_content is available in file analysis report for all supported file types
+	Execution Steps:
+		Post a file payload request for each supported file type to any endpoint
+	Expected Results:
+		The xml report in the response has content for all the file types
+
+9-Test_accuracy of generated analysis report
+	Execution Steps:
+		Run the analysis of the file through glasswall engine
+		Post a file payload request to any endpoint
+		Compare the xml report in the response against the report produced by the glasswall engine
+	Expected Results:
+		Both XML analysis reports should match
+
+
