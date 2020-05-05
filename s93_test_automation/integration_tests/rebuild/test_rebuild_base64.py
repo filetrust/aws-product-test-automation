@@ -14,17 +14,17 @@ class Test_rebuild_base64(unittest.TestCase):
         cls.endpoint        = f"{os.environ['endpoint']}/base64"
         cls.api_key         = os.environ["api_key"]
 
-        cls.bmp_32kb        = os.path.join("data", "files", "under_6mb", "bmp", "bmp_32kb.bmp")
-        cls.bmp_under_6mb   = os.path.join("data", "files", "under_6mb", "bmp", "bmp_5.93mb.bmp")
-        cls.bmp_over_6mb    = os.path.join("data", "files", "over_6mb", "bmp", "bmp_6.12mb.bmp")
+        cls.bmp_32kb        = os.path.join("s93_test_automation", "data", "files", "under_6mb", "bmp", "bmp_32kb.bmp")
+        cls.bmp_under_6mb   = os.path.join("s93_test_automation", "data", "files", "under_6mb", "bmp", "bmp_5.93mb.bmp")
+        cls.bmp_over_6mb    = os.path.join("s93_test_automation", "data", "files", "over_6mb", "bmp", "bmp_6.12mb.bmp")
 
-        cls.txt_1kb         = os.path.join("data", "files", "under_6mb", "txt", "txt_1kb.txt")
+        cls.txt_1kb         = os.path.join("s93_test_automation", "data", "files", "under_6mb", "txt", "txt_1kb.txt")
 
-        cls.doc_14kb_embedded_images    = os.path.join("data", "files", "under_6mb", "doc", "embedded_image_14kb.docx")
+        cls.doc_14kb_embedded_images    = os.path.join("s93_test_automation", "data", "files", "under_6mb", "doc", "embedded_image_14kb.docx")
 
-        cls.xls_48kb_malware_macro      = os.path.join("data", "files", "under_6mb", "malware", "xls", "CalcTest.xls")
+        cls.xls_48kb_malware_macro      = os.path.join("s93_test_automation", "data", "files", "under_6mb", "malware", "xls", "CalcTest.xls")
         
-        cls.jpeg_corrupt_10kb           = os.path.join("data", "files", "under_6mb", "corrupt", "Corrupted_jpeg_png_mag_no")
+        cls.jpeg_corrupt_10kb           = os.path.join("s93_test_automation", "data", "files", "under_6mb", "corrupt", "Corrupted_jpeg_png_mag_no")
 
     @classmethod
     def tearDownClass(cls):

@@ -8,7 +8,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="glasswall-aws-product-test-automation",
-    version="0.0.5",
+    version="0.0.6",
     author="AngusWR",
     author_email="aroberts@glasswallsolutions.com",
     description="A small package for testing Glasswall AWS products",
