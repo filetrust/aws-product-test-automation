@@ -1,7 +1,7 @@
 
 
 import os
-import pkg_resources
+# import pkg_resources
 
 
 def get_file_bytes(file_path):
@@ -16,13 +16,13 @@ def get_file_bytes(file_path):
     Raises:
         FileNotFound: if file_path is not a file
     """
-    return pkg_resources.resource_stream(
-        "s93_test_automation",
-        file_path
-    ).read()
+    # return pkg_resources.resource_stream(
+    #     "s93_test_automation",
+    #     file_path
+    # ).read()
 
-    # with open(file_path, "rb") as f:
-    #     return f.read()
+    with open(file_path, "rb") as f:
+        return f.read()
 
 
 def list_file_paths(directory, recursive=True, absolute=True):

@@ -1,5 +1,5 @@
 include LICENSE
 include MANIFEST.in
-include s93_test_automation/data *
+graft s93_test_automation/data
 global-exclude __pycache__
 global-exclude *.py[co]

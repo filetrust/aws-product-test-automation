@@ -5,11 +5,12 @@ logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger("glasswall")
 import os
 import sys
+from s93_test_automation import _ROOT
 import unittest
 
 
 def run(product):
-    test_directory = os.path.join(os.path.dirname(__file__), "integration_tests", product)
+    test_directory = os.path.join(_ROOT, "integration_tests", product)
     # test_directory = f"s93_test_automation.integration_tests.{product}"
     log.debug("test_directory: %s", test_directory)
 
@@ -17,7 +18,7 @@ def run(product):
     try:
         suite = unittest.TestLoader().discover(test_directory)
     except ImportError:
-        raise ValueError(f"Invalid product: {product}. Expected one of: {[f.name for f in os.scandir(os.path.join(os.path.dirname(__file__), 'integration_tests')) if f.is_dir() and f.name != '__pycache__']}")
+        raise ValueError(f"Invalid product: {product}. Expected one of: {[f.name for f in os.scandir(os.path.join(_ROOT, 'integration_tests')) if f.is_dir() and f.name != '__pycache__']}")
 
     # Run tests with verbosity 2
     result = unittest.TextTestRunner(verbosity=2).run(suite)

@@ -9,7 +9,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="glasswall-aws-product-test-automation",
-    version="0.0.82",
+    version="0.0.85",
     author="AngusWR",
     author_email="aroberts@glasswallsolutions.com",
     description="A small package for testing Glasswall AWS products",
@@ -17,9 +17,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/filetrust/aws-product-test-automation",
     packages=setuptools.find_packages(),
-    package_data={
-        "s93_test_automation": ["s93_test_automation/data/**"]
-    },
+    include_package_data=True,
     entry_points={
         "console_scripts": [
             "s93_test_automation = s93_test_automation.__main__:main",
