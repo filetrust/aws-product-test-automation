@@ -5,6 +5,7 @@ from base64 import b64encode, b64decode
 from http import HTTPStatus
 import os
 import requests
+from s93_test_automation import _ROOT
 import unittest
 
 
