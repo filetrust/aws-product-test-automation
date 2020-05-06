@@ -15,17 +15,16 @@ class Test_rebuild_base64(unittest.TestCase):
         cls.endpoint        = f"{os.environ['endpoint']}/base64"
         cls.api_key         = os.environ["api_key"]
 
-        cls.bmp_32kb        = os.path.join(_ROOT, "data", "files", "under_6mb", "bmp", "bmp_32kb.bmp")
-        cls.bmp_under_6mb   = os.path.join(_ROOT, "data", "files", "under_6mb", "bmp", "bmp_5.93mb.bmp")
-        cls.bmp_over_6mb    = os.path.join(_ROOT, "data", "files", "over_6mb", "bmp", "bmp_6.12mb.bmp")
+        cls.bmp_32kb        = os.path.join("data", "files", "under_6mb", "bmp", "bmp_32kb.bmp")
+        cls.bmp_under_6mb   = os.path.join("data", "files", "under_6mb", "bmp", "bmp_5.93mb.bmp")
+        cls.bmp_over_6mb    = os.path.join("data", "files", "over_6mb", "bmp", "bmp_6.12mb.bmp")
 
-        cls.txt_1kb         = os.path.join(_ROOT, "data", "files", "under_6mb", "txt", "txt_1kb.txt")
+        cls.txt_1kb         = os.path.join("data", "files", "under_6mb", "txt", "txt_1kb.txt")
 
-        cls.doc_14kb_embedded_images    = os.path.join(_ROOT, "data", "files", "under_6mb", "doc", "embedded_image_14kb.docx")
+        cls.doc_14kb_embedded_images    = os.path.join("data", "files", "under_6mb", "doc", "embedded_image_14kb.docx")
 
-        cls.xls_48kb_malware_macro      = os.path.join(_ROOT, "data", "files", "under_6mb", "malware", "xls", "CalcTest.xls")
-        
-        cls.jpeg_corrupt_10kb           = os.path.join(_ROOT, "data", "files", "under_6mb", "corrupt", "Corrupted_jpeg_png_mag_no")
+        cls.xls_48kb_malware_macro      = os.path.join("data", "files", "under_6mb", "malware", "xls", "CalcTest.xls")
+        cls.jpeg_corrupt_10kb           = os.path.join("data", "files", "under_6mb", "corrupt", "Corrupted_jpeg_png_mag_no")
 
     @classmethod
     def tearDownClass(cls):
@@ -36,14 +35,12 @@ class Test_rebuild_base64(unittest.TestCase):
 
     def tearDown(self):
         pass
-
+    
+    @unittest.skip
     def test_post___external_files___returns_200_ok_for_all_files(self):
         # Check that the directory containing test files is not empty
-        try:
-            external_files = list_file_paths(os.environ["test_files"])
-        except NotADirectoryError:
-            external_files = []
-        if not external_files:
+        external_files = list_file_paths(os.environ["test_files"])
+        if external_files == []:
             return unittest.skip("No external files found.")
 
         for file_path in external_files:
@@ -104,6 +101,7 @@ class Test_rebuild_base64(unittest.TestCase):
             test_file
         )
 
+    @unittest.skip
     def test_post___bmp_over_6mb___returns_status_code_413(self):
         """
         2-Test_Accurate error returned for a over 6mb file submit using base64 code with valid x-api key
@@ -297,7 +295,8 @@ class Test_rebuild_base64(unittest.TestCase):
         #     test_file
         # )
 
-    def test_post___doc_14kb_embedded_images_content_management_policy_disallow___returns_protected_file(self):
+    @unittest.skip
+    def test_post___bmp_32kb_content_management_policy_disallow___returns_status_code_200(self):
         """
         4-Test_The default cmp policy is applied to submitted file using base64 code
         Steps:
