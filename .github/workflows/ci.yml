@@ -1,0 +1,17 @@
+name: Update PyPi package
+
+on:
+  push:
+      branches:
+        - master
+
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - uses: casperdcl/deploy-pypi@v1
+        if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+        with:
+          password: ${{ secrets.pypi_token }}
+          build: true
