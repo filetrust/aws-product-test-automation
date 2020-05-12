@@ -35,7 +35,7 @@ class Test_rebuild_base64(unittest.TestCase):
 
     def tearDown(self):
         pass
-    
+
     @unittest.skip
     def test_post___external_files___returns_200_ok_for_all_files(self):
         # Check that the directory containing test files is not empty
@@ -101,7 +101,7 @@ class Test_rebuild_base64(unittest.TestCase):
             test_file
         )
 
-    @unittest.skip
+    @unittest.skip("6 - 10mb edge case, results in status_code 500")
     def test_post___bmp_over_6mb___returns_status_code_413(self):
         """
         2-Test_Accurate error returned for a over 6mb file submit using base64 code with valid x-api key
@@ -295,7 +295,6 @@ class Test_rebuild_base64(unittest.TestCase):
         #     test_file
         # )
 
-    @unittest.skip
     def test_post___bmp_32kb_content_management_policy_disallow___returns_status_code_200(self):
         """
         4-Test_The default cmp policy is applied to submitted file using base64 code
@@ -335,11 +334,14 @@ class Test_rebuild_base64(unittest.TestCase):
             HTTPStatus.OK
         )
 
-        # Response content should be empty bytes, the file contains embedded images which is set to disallow
-        self.assertEqual(
-            b64decode(response.content),
-            b""
-        )
+        # Content-Type should be application/json
+        self.assertTrue("application/json" in response.headers.get("Content-Type"))
+
+        # JSON should have an errorMessage key
+        self.assertTrue("errorMessage" in response.json().keys())
+
+        # JSON should have isDisallowed key with value True
+        self.assertTrue(response.json().get("isDisallowed"))
 
     def test_post___txt_1kb___returns_status_code_422(self):
         """
