@@ -2,6 +2,7 @@
 
 import os
 import setuptools
+from s93_test_automation import __version__
 
 
 with open("README.md", "r") as f:
@@ -9,7 +10,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="glasswall-aws-product-test-automation",
-    version="0.1.0",
+    version=__version__,
     author="AngusWR",
     author_email="aroberts@glasswallsolutions.com",
     description="A small package for testing Glasswall AWS products",
