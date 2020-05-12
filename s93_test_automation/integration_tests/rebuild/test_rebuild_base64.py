@@ -1,6 +1,6 @@
 
 
-from s93_test_automation.common import get_file_bytes, list_file_paths
+from s93_test_automation.common import get_file_bytes, list_file_paths, get_md5
 from base64 import b64encode, b64decode
 from http import HTTPStatus
 import os
@@ -21,9 +21,9 @@ class Test_rebuild_base64(unittest.TestCase):
 
         cls.txt_1kb         = os.path.join(_ROOT, "data", "files", "under_6mb", "txt", "txt_1kb.txt")
 
-        cls.doc_14kb_embedded_images    = os.path.join(_ROOT, "data", "files", "under_6mb", "doc", "embedded_image_14kb.docx")
+        cls.doc_embedded_images_12kb    = os.path.join(_ROOT, "data", "files", "under_6mb", "doc", "doc_embedded_images_12kb.docx")
 
-        cls.xls_48kb_malware_macro      = os.path.join(_ROOT, "data", "files", "under_6mb", "malware", "xls", "CalcTest.xls")
+        cls.xls_malware_macro_48kb      = os.path.join(_ROOT, "data", "files", "under_6mb", "harmless_macro", "xls", "CalcTest.xls")
         cls.jpeg_corrupt_10kb           = os.path.join(_ROOT, "data", "files", "under_6mb", "corrupt", "Corrupted_jpeg_png_mag_no")
 
     @classmethod
@@ -65,7 +65,7 @@ class Test_rebuild_base64(unittest.TestCase):
                 HTTPStatus.OK
             )
 
-    def test_post___bmp_32kb___returns_status_code_200_and_protected_file(self):
+    def test_post___bmp_32kb___returns_status_code_200_protected_file(self):
         """
         1Test_File submit using base64 code & less than 6mb with valid x-api key is successful
         Steps:
@@ -162,7 +162,7 @@ class Test_rebuild_base64(unittest.TestCase):
             HTTPStatus.FORBIDDEN
         )
 
-    def test_post___bmp_32kb_content_management_policy_allow___returns_protected_file(self):
+    def test_post___doc_embedded_images_content_management_policy_allow___returns_status_code_200_identical_file(self):
         """
         4-Test_The default cmp policy is applied to submitted file using base64 code
         Steps:
@@ -176,7 +176,7 @@ class Test_rebuild_base64(unittest.TestCase):
         """
 
         # Set variable for file to test
-        test_file = get_file_bytes(self.doc_14kb_embedded_images)
+        test_file = get_file_bytes(self.doc_embedded_images_12kb)
 
         # Send post request
         response = requests.post(
@@ -237,13 +237,15 @@ class Test_rebuild_base64(unittest.TestCase):
             HTTPStatus.OK
         )
 
-        # # Response content should be identical to the test file input # TODO compare to known file bytes
-        # self.assertEqual(
-        #     b64decode(response.content),
-        #     test_file
-        # )
+        # Response content should be identical to the test file input.
+        # This might not be the case for other files as Glasswall may reorganise them structurally.
+        response_file_bytes = b64decode(response.content)
+        self.assertEqual(
+            response_file_bytes,
+            test_file
+        )
 
-    def test_post___bmp_32kb_content_management_policy_sanitise___returns_protected_file(self):
+    def test_post___doc_embedded_images_12kb_content_management_policy_sanitise___returns_status_code_200_sanitised_file(self):
         """
         4-Test_The default cmp policy is applied to submitted file using base64 code
         Steps:
@@ -257,7 +259,7 @@ class Test_rebuild_base64(unittest.TestCase):
         """
 
         # Set variable for file to test
-        test_file = get_file_bytes(self.doc_14kb_embedded_images)
+        test_file = get_file_bytes(self.doc_embedded_images_12kb)
 
         # Send post request
         response = requests.post(
@@ -289,13 +291,14 @@ class Test_rebuild_base64(unittest.TestCase):
             HTTPStatus.OK
         )
 
-        # # Response content should be identical to the test file input # TODO compare to known file bytes
-        # self.assertEqual(
-        #     b64decode(response.content),
-        #     test_file
-        # )
+        # Response content as file bytes should match known md5 of expected bytes.
+        response_file_bytes = b64decode(response.content)
+        self.assertEqual(
+            get_md5(response_file_bytes),
+            "665f3d263d7fe25b7491cbeec657abb0"
+        )
 
-    def test_post___bmp_32kb_content_management_policy_disallow___returns_status_code_200(self):
+    def test_post___doc_embedded_images_12kb_content_management_policy_disallow___returns_status_code_200_disallowed_json(self):
         """
         4-Test_The default cmp policy is applied to submitted file using base64 code
         Steps:
@@ -309,7 +312,7 @@ class Test_rebuild_base64(unittest.TestCase):
         """
 
         # Set variable for file to test
-        test_file = get_file_bytes(self.doc_14kb_embedded_images)
+        test_file = get_file_bytes(self.doc_embedded_images_12kb)
 
         # Send post request
         response = requests.post(
@@ -373,7 +376,7 @@ class Test_rebuild_base64(unittest.TestCase):
             HTTPStatus.UNPROCESSABLE_ENTITY
         )
 
-    def test_post___xls_48kb_malware_macro___returns_status_code_200(self):
+    def test_post___xls_malware_macro_48kb___returns_status_code_200_sanitised_file(self):
         """
         12-Test_upload of files with issues and or malware using base64 code with valid x-api key 
         Execution Steps:
@@ -387,7 +390,7 @@ class Test_rebuild_base64(unittest.TestCase):
         """
 
         # Set variable for file to test
-        test_file = get_file_bytes(self.xls_48kb_malware_macro)
+        test_file = get_file_bytes(self.xls_malware_macro_48kb)
 
         # Send post request
         response = requests.post(
@@ -401,10 +404,17 @@ class Test_rebuild_base64(unittest.TestCase):
             }
         )
 
-        # Status code should be 422, Unprocessable Entity
+        # Status code should be 200, OK
         self.assertEqual(
             response.status_code,
             HTTPStatus.OK
+        )
+
+        # Response content as file bytes should match known md5 of expected bytes.
+        response_file_bytes = b64decode(response.content)
+        self.assertEqual(
+            get_md5(response_file_bytes),
+            "4b6ef99d2932fd735a4eed1c1ca236ee"
         )
 
     def test_post___jpeg_corrupt_10kb___returns_status_code_422(self):
