@@ -138,7 +138,7 @@ def get_presigned_urls(file_path: str, endpoint_upload: str, endpoint_download: 
                 "x-api-key": api_key,
             }
         )
-    log.debug(f"File uploaded to: {endpoint_upload_response.get('ObjectKey')}")
+    log.info(f"File uploaded to: {endpoint_upload_response.get('ObjectKey')}")
 
     # presigned url to download the file
     InputGetUrl = requests.get(
