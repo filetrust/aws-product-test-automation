@@ -2,6 +2,8 @@
 
 from base64 import b64encode, b64decode
 from http import HTTPStatus
+import logging
+log = logging.getLogger("glasswall")
 import os
 import requests
 from s93_test_automation import _ROOT
@@ -12,6 +14,7 @@ import unittest
 class Test_rebuild_base64(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        log.info(f"Setting up {cls.__name__}")
         cls.endpoint                    = f"{os.environ['endpoint']}/base64"
         cls.api_key                     = os.environ["api_key"]
 
