@@ -1,10 +1,10 @@
 
 
-from s93_test_automation import run_tests
 import argparse
 import logging
 log = logging.getLogger("glasswall")
 import os
+from s93_test_automation import _ROOT, run_tests
 import unittest
 
 
@@ -37,7 +37,7 @@ def get_command_line_args():
         dest="test_files",
         help="Path to directory containing external test files.",
         type=str,
-        default=os.path.join("data", "files", "external")
+        default=os.path.join(_ROOT, "data", "files", "external")
     )
     parser.add_argument(
         "--logging_level", "-l",

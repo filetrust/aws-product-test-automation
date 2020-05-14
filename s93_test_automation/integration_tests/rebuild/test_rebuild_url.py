@@ -374,37 +374,36 @@ class Test_rebuild_url(unittest.TestCase):
             "4b6ef99d2932fd735a4eed1c1ca236ee"
         )
 
-    # # waiting for update to the presigned url lambda to allow files with no extension
-    # @unittest.expectedFailure
-    # def test_post___jpeg_corrupt_10kb___returns_status_code_422(self):
-    #     """
-    #     11b-Test_upload of files with issues and or malware using presigned with valid x-api key
-    #     Execution Steps:
-    #         Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-    #         Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-    #         Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-    #     Expected Results:
-    #         The response message returned for file containing malware is:'OK' with success code '200'
-    #         The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
-    #         The response message returned for file containing malware is: 'Unprocessable Entity' with error code '422'
-    #     """
-    #     # Send post request
-    #     response = requests.post(
-    #         url=self.endpoint,
-    #         json={
-    #             "InputGetUrl": self.jpeg_corrupt_10kb_urls.get("InputGetUrl"),
-    #             "OutputPutUrl": self.jpeg_corrupt_10kb_urls.get("OutputPutUrl"),
-    #         },
-    #         headers={
-    #             "x-api-key": self.api_key,
-    #         }
-    #     )
+    @unittest.skip("waiting for update to the presigned url lambda to allow files with no extension")
+    def test_post___jpeg_corrupt_10kb___returns_status_code_422(self):
+        """
+        11b-Test_upload of files with issues and or malware using presigned with valid x-api key
+        Execution Steps:
+            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+        Expected Results:
+            The response message returned for file containing malware is:'OK' with success code '200'
+            The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
+            The response message returned for file containing malware is: 'Unprocessable Entity' with error code '422'
+        """
+        # Send post request
+        response = requests.post(
+            url=self.endpoint,
+            json={
+                "InputGetUrl": self.jpeg_corrupt_10kb_urls.get("InputGetUrl"),
+                "OutputPutUrl": self.jpeg_corrupt_10kb_urls.get("OutputPutUrl"),
+            },
+            headers={
+                "x-api-key": self.api_key,
+            }
+        )
 
-    #     # Status code should be 422, Unprocessable Entity
-    #     self.assertEqual(
-    #         response.status_code,
-    #         HTTPStatus.UNPROCESSABLE_ENTITY
-    #     )
+        # Status code should be 422, Unprocessable Entity
+        self.assertEqual(
+            response.status_code,
+            HTTPStatus.UNPROCESSABLE_ENTITY
+        )
 
 
 if __name__ == "__main__":
