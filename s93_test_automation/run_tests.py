@@ -1,7 +1,6 @@
 
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger("glasswall")
 import os
 import sys
@@ -11,7 +10,6 @@ import unittest
 
 def run(product):
     test_directory = os.path.join(_ROOT, "integration_tests", product)
-    # test_directory = f"s93_test_automation.integration_tests.{product}"
     log.debug("test_directory: %s", test_directory)
 
     # Discover tests in test_directory

@@ -3,7 +3,6 @@
 from s93_test_automation import run_tests
 import argparse
 import logging
-logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger("glasswall")
 import os
 import unittest
@@ -40,6 +39,16 @@ def get_command_line_args():
         type=str,
         default=os.path.join("data", "files", "external")
     )
+    parser.add_argument(
+        "--logging_level", "-l",
+        dest="logging_level",
+        help="The logger logging level.",
+        type=str,
+        default="INFO",
+        const="INFO",
+        nargs="?",
+        choices=("NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
+    )
 
     return parser.parse_args()
 
@@ -50,9 +59,14 @@ def set_environment_variables(args):
     os.environ["test_files"]    = args.test_files
 
 
+def set_logging_level(level):
+    logging.basicConfig(level=getattr(logging, level))
+
+
 def main():
     args = get_command_line_args()
     set_environment_variables(args)
+    set_logging_level(args.logging_level)
 
     run_tests.run(product=args.product)
 

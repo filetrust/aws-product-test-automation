@@ -1,7 +1,10 @@
 
 
 import hashlib
+import logging
+log = logging.getLogger("glasswall")
 import os
+import requests
 from typing import Union
 
 
@@ -94,6 +97,66 @@ def get_md5(file_: Union[bytes, str], chunk_size=67_108_864):
         md5.update(file_)
     elif isinstance(file_, str):
         with open(file_, "rb") as f:
-            md5 = _md5_chunked(f, chunk_size).hexdigest()
+            md5 = _md5_chunked(f, chunk_size)
 
     return md5.hexdigest()
+
+
+def get_presigned_urls(file_path: str, endpoint_upload: str, endpoint_download: str, api_key: str):
+    """ Uploads a file and generates a dictionary containing two presigned urls suitable for the /url endpoint.
+
+    Args:
+        file_path (str): The local file path.
+        endpoint_upload (str): The API Gateway endpoint to generate presigned urls to upload files.
+        endpoint_download (str): The API Gateway endpoint to generate presigned urls to download files.
+        api_key (str) The API key used to access the API Gateway.
+
+    Returns:
+        dict (dict): A dictionary containing two presigned urls: InputGetUrl, OutputPutUrl
+    """
+    file_name = os.path.basename(file_path)
+
+    endpoint_upload_response = requests.get(
+        url=f"{endpoint_upload}/{file_name}",
+        headers={
+            "x-api-key": api_key
+        }
+    ).json()
+
+    upload_url      = endpoint_upload_response.get("PresignedUrl")
+    region          = endpoint_upload_response.get("Region")
+    bucket          = endpoint_upload_response.get("Bucket")
+    object_key      = os.path.dirname(endpoint_upload_response.get("ObjectKey"))
+    file_name       = os.path.basename(endpoint_upload_response.get("ObjectKey"))
+
+    # upload the file
+    with open(file_path, "rb") as f:
+        requests.put(
+            url=upload_url,
+            data=f,
+            headers={
+                "x-api-key": api_key,
+            }
+        )
+    log.info(f"File uploaded to: {endpoint_upload_response.get('ObjectKey')}")
+
+    # presigned url to download the file
+    InputGetUrl = requests.get(
+        url=f"{endpoint_download}?bucketName={bucket}&objectPath={object_key}&region={region}&fileName={file_name}",
+        headers={
+            "x-api-key": api_key
+        }
+    ).json().get("PresignedUrl")
+
+    file_name, extension = os.path.splitext(os.path.basename(file_path))
+    OutputPutUrl = requests.get(
+        url=f"{endpoint_upload}/{file_name}_output{extension}",
+        headers={
+            "x-api-key": api_key
+        }
+    ).json().get("PresignedUrl")
+
+    return {
+        "InputGetUrl": InputGetUrl,
+        "OutputPutUrl": OutputPutUrl
+    }

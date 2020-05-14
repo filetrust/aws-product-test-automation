@@ -1,25 +1,28 @@
 
 
-from s93_test_automation.common import get_file_bytes, list_file_paths, get_md5
 from base64 import b64encode, b64decode
 from http import HTTPStatus
+import logging
+log = logging.getLogger("glasswall")
 import os
 import requests
 from s93_test_automation import _ROOT
+from s93_test_automation.common import get_file_bytes, list_file_paths, get_md5
 import unittest
 
 
 class Test_rebuild_base64(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.endpoint        = f"{os.environ['endpoint']}/base64"
-        cls.api_key         = os.environ["api_key"]
+        log.info(f"Setting up {cls.__name__}")
+        cls.endpoint                    = f"{os.environ['endpoint']}/base64"
+        cls.api_key                     = os.environ["api_key"]
 
-        cls.bmp_32kb        = os.path.join(_ROOT, "data", "files", "under_6mb", "bmp", "bmp_32kb.bmp")
-        cls.bmp_under_6mb   = os.path.join(_ROOT, "data", "files", "under_6mb", "bmp", "bmp_5.93mb.bmp")
-        cls.bmp_over_6mb    = os.path.join(_ROOT, "data", "files", "over_6mb", "bmp", "bmp_6.12mb.bmp")
+        cls.bmp_32kb                    = os.path.join(_ROOT, "data", "files", "under_6mb", "bmp", "bmp_32kb.bmp")
+        cls.bmp_under_6mb               = os.path.join(_ROOT, "data", "files", "under_6mb", "bmp", "bmp_5.93mb.bmp")
+        cls.bmp_over_6mb                = os.path.join(_ROOT, "data", "files", "over_6mb", "bmp", "bmp_6.12mb.bmp")
 
-        cls.txt_1kb         = os.path.join(_ROOT, "data", "files", "under_6mb", "txt", "txt_1kb.txt")
+        cls.txt_1kb                     = os.path.join(_ROOT, "data", "files", "under_6mb", "txt", "txt_1kb.txt")
 
         cls.doc_embedded_images_12kb    = os.path.join(_ROOT, "data", "files", "under_6mb", "doc", "doc_embedded_images_12kb.docx")
 
@@ -162,7 +165,7 @@ class Test_rebuild_base64(unittest.TestCase):
             HTTPStatus.FORBIDDEN
         )
 
-    def test_post___doc_embedded_images_content_management_policy_allow___returns_status_code_200_identical_file(self):
+    def test_post___doc_embedded_images_12kb_content_management_policy_allow___returns_status_code_200_identical_file(self):
         """
         4-Test_The default cmp policy is applied to submitted file using base64 code
         Steps:
