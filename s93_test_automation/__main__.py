@@ -44,8 +44,8 @@ def get_command_line_args():
         dest="logging_level",
         help="The logger logging level.",
         type=str,
-        default="DEBUG",
-        const="DEBUG",
+        default="INFO",
+        const="INFO",
         nargs="?",
         choices=("NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
     )
