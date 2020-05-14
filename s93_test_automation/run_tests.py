@@ -1,7 +1,6 @@
 
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger("glasswall")
 import os
 import sys
