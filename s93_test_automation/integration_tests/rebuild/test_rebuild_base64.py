@@ -39,7 +39,6 @@ class Test_rebuild_base64(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @unittest.skip
     def test_post___external_files___returns_200_ok_for_all_files(self):
         # Check that the directory containing test files is not empty
         external_files = list_file_paths(os.environ["test_files"])
@@ -159,7 +158,7 @@ class Test_rebuild_base64(unittest.TestCase):
             }
         )
 
-        # Status code should be 400, bad request
+        # Status code should be 403, forbidden
         self.assertEqual(
             response.status_code,
             HTTPStatus.FORBIDDEN
