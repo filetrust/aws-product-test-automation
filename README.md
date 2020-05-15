@@ -9,11 +9,11 @@ A small package for testing Glasswall AWS product endpoints
 pip install aws-product-test-automation
 ```
 
-### Prerequisites
+#### Prerequisites
 
 * [Python >= 3.6](https://www.python.org/downloads/)
 
-### Usage
+#### Usage
 
 ```cmd
 s93_test_automation --product "PRODUCT" --endpoint "ENDPOINT" --api_key "API_KEY"
@@ -82,10 +82,7 @@ Ran 29 tests in 34.634s
 OK (skipped=5)
 ```
 </details>
+
 ## Built With
 
 * [Python 3.8.1 64-bit](https://www.python.org/downloads/release/python-381/)
-
-## Authors
-
-See the list of [contributors](https://github.com/filetrust/aws-product-test-automation/graphs/contributors) who participated in this project.
