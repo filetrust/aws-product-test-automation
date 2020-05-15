@@ -21,13 +21,13 @@ s93_test_automation --product "PRODUCT" --endpoint "ENDPOINT" --api_key "API_KEY
 
 ### Arguments
 
-| Argument                     | Short | Necessity | Description |
-| ---------------------------- | :---: | :-------: | :- |
-| <nobr>--product</nobr>       | -p    | Required  | ==(str)== Name of a product corresponding to a directory in [s93_test_automation/integration_tests](https://github.com/filetrust/aws-product-test-automation/tree/master/s93_test_automation/integration_tests).<br>e.g. `"rebuild"` |
-| <nobr>--endpoint</nobr>      | -e    | Required  | ==(str)== API Gateway product endpoint url.<br> e.g. `"https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/Rebuild"` |
-| <nobr>--api_key</nobr>       | -a    | Required  | ==(str)== An AWS API key that grants access to the endpoint specified as well as other Glasswall product endpoints, such as the presigned url generator.<br>e.g. `"a612ciXevo7FM9UKlkaj2D27s6u7Nieb6K2z9929d"` |
-| <nobr>--test_files</nobr>    | -t    | Optional  | **This functionality is currently disabled.**<br>==(str)== A directory containing external files to perform basic status code tests on. Defaults to `s93_test_automation/data/files/external`  |
-| <nobr>--logging_level</nobr> | -l    | Optional  | ==(str)== The logging level of the Python logging module. Defaults to `INFO`. Valid values are: `NOTSET`,`DEBUG`,`INFO`,`WARNING`,`ERROR`,`CRITICAL` |
+| Argument        | Short | Necessity | Description |
+| --------------- | :---: | :-------: | :- |
+| --product       | -p    | Required  | ==(str)== Name of a product corresponding to a directory in [s93_test_automation/integration_tests](https://github.com/filetrust/aws-product-test-automation/tree/master/s93_test_automation/integration_tests).<br>e.g. `"rebuild"` |
+| --endpoint      | -e    | Required  | ==(str)== API Gateway product endpoint url.<br> e.g. `"https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/Rebuild"` |
+| --api_key       | -a    | Required  | ==(str)== An AWS API key that grants access to the endpoint specified as well as other Glasswall product endpoints, such as the presigned url generator.<br>e.g. `"a612ciXevo7FM9UKlkaj2D27s6u7Nieb6K2z9929d"` |
+| --test_files    | -t    | Optional  | **This functionality is currently disabled.**<br>==(str)== A directory containing external files to perform basic status code tests on. Defaults to `s93_test_automation/data/files/external`  |
+| <span style="white-space: nowrap">--logging_level</span> | -l    | Optional  | ==(str)== The logging level of the Python logging module. Defaults to `INFO`. Valid values are: `NOTSET`,`DEBUG`,`INFO`,`WARNING`,`ERROR`,`CRITICAL` |
 
 ### Example run (2020/05/14)
 <details>
