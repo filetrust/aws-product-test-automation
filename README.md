@@ -9,17 +9,17 @@ A small package for testing Glasswall AWS product endpoints
 pip install aws-product-test-automation
 ```
 
-#### Prerequisites
+### Prerequisites
 
 * [Python >= 3.6](https://www.python.org/downloads/)
 
-#### Usage
+### Usage
 
 ```cmd
 s93_test_automation --product "PRODUCT" --endpoint "ENDPOINT" --api_key "API_KEY"
 ```
 
-##### Arguments
+### Arguments
 
 | Argument        | Short | Necessity | Description |
 | --------------- | :---: | :-------: | :- |
@@ -29,7 +29,7 @@ s93_test_automation --product "PRODUCT" --endpoint "ENDPOINT" --api_key "API_KEY
 | --test_files    | -t    | Optional  | **This functionality is currently disabled.**<br>==(str)== A directory containing external files to perform basic status code tests on. Defaults to `s93_test_automation/data/files/external`  |
 | --logging_level | -l    | Optional  | ==(str)== The logging level of the Python logging module. Defaults to `INFO`. Valid values are: `NOTSET`,`DEBUG`,`INFO`,`WARNING`,`ERROR`,`CRITICAL` |
 
-##### Example run (2020/05/14)
+### Example run (2020/05/14)
 <details>
 <summary>Click to expand</summary>
     
