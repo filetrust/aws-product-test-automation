@@ -6,7 +6,7 @@ A small package for testing Glasswall AWS product endpoints
 ## Getting Started
 
 ```cmd
-pip install aws-product-test-automation
+pip install glasswall-aws-product-test-automation
 ```
 
 ### Prerequisites
