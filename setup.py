@@ -12,6 +12,7 @@ setuptools.setup(
     name="glasswall-aws-product-test-automation",
     version=__version__,
     author="AngusWR",
+    password="WEfwzewfc"
     author_email="aroberts@glasswallsolutions.com",
     description="A small package for testing Glasswall AWS products",
     long_description=long_description,
