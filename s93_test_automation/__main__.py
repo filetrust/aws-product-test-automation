@@ -28,9 +28,24 @@ def get_command_line_args():
     parser.add_argument(
         "--api_key", "-a",
         dest="api_key",
-        help="API key to access endpoint.",
+        help="API key to access endpoint for s3 Bucket.",
         type=str,
         required=True
+    )
+    parser.add_argument(
+        "--jwt_token", "-j",
+        dest="jwt_token",
+        help="authorisation token to access endpoint.",
+        type=str,
+        required=True
+    )
+    parser.add_argument(
+        "--invalid_token","-i",
+        dest="invalid_token",
+        help="invalid token that cannot acess endpoint.",
+        type=str,
+        required=True
+
     )
     parser.add_argument(
         "--test_files", "-t",
@@ -57,6 +72,8 @@ def set_environment_variables(args):
     os.environ["endpoint"]      = args.endpoint
     os.environ["api_key"]       = args.api_key
     os.environ["test_files"]    = args.test_files
+    os.environ["jwt_token"]     = args.jwt_token
+    os.environ["invalid_token"] = args.invalid_token
 
 
 def set_logging_level(level):

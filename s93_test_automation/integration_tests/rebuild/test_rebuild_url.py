@@ -15,8 +15,10 @@ class Test_rebuild_url(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         log.info(f"Setting up {cls.__name__}")
-        cls.endpoint                        = f"{os.environ['endpoint']}"
+        cls.endpoint                        = f"{os.environ['endpoint']}/api/rebuild/"
         cls.api_key                         = os.environ["api_key"]
+        cls.jwt_token                       = os.environ["jwt_token"]
+        cls.invalid_token                   = os.environ["invalid_token"]
 
         cls.endpoint_upload                 = "https://l76geea2l9.execute-api.eu-west-2.amazonaws.com/development/generate-post-presigned-url"
         cls.endpoint_download               = "https://l76geea2l9.execute-api.eu-west-2.amazonaws.com/development/generate-presigned-url"
@@ -55,9 +57,9 @@ class Test_rebuild_url(unittest.TestCase):
 
     def test_post___bmp_32kb___returns_status_code_200_protected_file(self):
         """
-        5-Test_File submit using pre-signed url with valid x-api key is successful
+        5-Test_File submit using pre-signed url with valid jwt token is successful
         Steps:
-            Post a file payload request with file url to endpoint: '[API GATEWAY URL]/api/Rebuild' with valid x-api key
+            Post a file payload request with file url to endpoint: '[API GATEWAY URL]/api/Rebuild' with valid jwt token
         Expected:
             The response is returned with the processed file and success code 200
         """
@@ -69,7 +71,7 @@ class Test_rebuild_url(unittest.TestCase):
                 "OutputPutUrl": self.bmp_32kb_urls.get("OutputPutUrl"),
             },
             headers={
-                "x-api-key": self.api_key,
+                "Authorization": self.jwt_token,
             }
         )
 
@@ -85,13 +87,13 @@ class Test_rebuild_url(unittest.TestCase):
             get_md5(self.bmp_32kb)
         )
 
-    def test_post___bmp_32kb_no_api_key___returns_status_code_403(self):
+    def test_post___bmp_32kb_no_jwt_token___returns_status_code_403(self):
         """
-        6a-Test_File submit using pre-signed url with no x-api key is unsuccessful
+        6a-Test_File submit using pre-signed url with no jwt token is unsuccessful
         Steps:
-            Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with invalid x-api key
+            Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with invalid jwt token
         Expected:
-            The response message 'forbidden' is returned with error code '403'
+            The response message 'unauthorized' is returned with error code '401'
         """
         # Send post request
         response = requests.post(
@@ -102,20 +104,21 @@ class Test_rebuild_url(unittest.TestCase):
             }
         )
 
-        # Status code should be 403, forbidden
+        # Status code should be 401, unauthorized
         self.assertEqual(
             response.status_code,
-            HTTPStatus.FORBIDDEN
+            HTTPStatus.UNAUTHORIZED
         )
 
-    def test_post___bmp_32kb_invalid_api_key___returns_status_code_403(self):
+    def test_post___bmp_32kb_invalid_token___returns_status_code_403(self):
         """
-        6b-Test_File submit using pre-signed url with invalid x-api key is unsuccessful
+        6b-Test_File submit using pre-signed url with invalid token is unsuccessful
         Steps:
-                Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with invalid x-api key
+                Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with invalid token
         Expected:
             The response message 'forbidden' is returned with error code '403'
         """
+
         # Send post request
         response = requests.post(
             url=self.endpoint,
@@ -124,7 +127,7 @@ class Test_rebuild_url(unittest.TestCase):
                 "OutputPutUrl": self.bmp_32kb_urls.get("OutputPutUrl"),
             },
             headers={
-                "x-api-key": self.api_key + "abcdef",
+                "Authorization": self.invalid_token,
             }
         )
 
@@ -134,12 +137,13 @@ class Test_rebuild_url(unittest.TestCase):
             HTTPStatus.FORBIDDEN
         )
 
+
     def test_post___doc_embedded_images_12kb_content_management_policy_allow___returns_status_code_200_identical_file(self):
         """
         7a-Test_The default cmp policy is applied to submitted file using pre-signed url
         Steps:
                 Set cmp policy for file type as 'cmptype'
-                Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+                Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid jwt token
         Expected:
         The response is returned with error code '200'
                 If cmpType is 'Sanitise', Then the file is returned sanitised
@@ -195,7 +199,7 @@ class Test_rebuild_url(unittest.TestCase):
                 }
             },
             headers={
-                "x-api-key": self.api_key,
+                "Authorization": self.jwt_token,
             }
         )
 
@@ -216,7 +220,7 @@ class Test_rebuild_url(unittest.TestCase):
         7b-Test_The default cmp policy is applied to submitted file using pre-signed url
         Steps:
                 Set cmp policy for file type as 'cmptype'
-                Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+                Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid jwt token
         Expected:
         The response is returned with error code '200'
                 If cmpType is 'Sanitise', Then the file is returned sanitised
@@ -243,7 +247,7 @@ class Test_rebuild_url(unittest.TestCase):
                 },
             },
             headers={
-                "x-api-key": self.api_key,
+                "Authorization": self.jwt_token,
             }
         )
 
@@ -270,7 +274,7 @@ class Test_rebuild_url(unittest.TestCase):
         7c-Test_The default cmp policy is applied to submitted file using pre-signed url
         Steps:
             Set cmp policy for file type as 'cmptype'
-            Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+            Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid jwt token
         Expected:
             The response is returned with error code '200'
                 If cmpType is 'Sanitise', Then the file is returned sanitised
@@ -290,7 +294,7 @@ class Test_rebuild_url(unittest.TestCase):
                 },
             },
             headers={
-                "x-api-key": self.api_key,
+                "Authorization": self.jwt_token,
             }
         )
 
@@ -308,9 +312,9 @@ class Test_rebuild_url(unittest.TestCase):
 
     def test_post___txt_1kb___returns_status_code_422(self):
         """
-        9-Test_unsupported file upload using pre-signed url with valid x-api key is unsuccessful
+        9-Test_unsupported file upload using pre-signed url with valid jwt token is unsuccessful
         Execution Steps:
-                Post a payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+                Post a payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid jwt token
         Expected Results:
             The response message 'Unprocessable Entity' is returned with error code '422'
         """
@@ -322,7 +326,7 @@ class Test_rebuild_url(unittest.TestCase):
                 "OutputPutUrl": self.txt_1kb_urls.get("OutputPutUrl"),
             },
             headers={
-                "x-api-key": self.api_key,
+                "Authorization": self.jwt_token,
             }
         )
 
@@ -334,11 +338,11 @@ class Test_rebuild_url(unittest.TestCase):
 
     def test_post___xls_malware_macro_48kb___returns_status_code_200_sanitised_file(self):
         """
-        11a-Test_upload of files with issues and or malware using presigned with valid x-api key
+        11a-Test_upload of files with issues and or malware using presigned with valid jwt token
         Execution Steps:
-            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid jwt token
+            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid jwt token
+            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid jwt token
         Expected Results:
             The response message returned for file containing malware is:'OK' with success code '200'
             The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
@@ -352,7 +356,7 @@ class Test_rebuild_url(unittest.TestCase):
                 "OutputPutUrl": self.xls_malware_macro_48kb_urls.get("OutputPutUrl"),
             },
             headers={
-                "x-api-key": self.api_key
+                "Authorization": self.jwt_token
             }
         )
 
@@ -377,11 +381,11 @@ class Test_rebuild_url(unittest.TestCase):
     @unittest.skip("waiting for update to the presigned url lambda to allow files with no extension")
     def test_post___jpeg_corrupt_10kb___returns_status_code_422(self):
         """
-        11b-Test_upload of files with issues and or malware using presigned with valid x-api key
+        11b-Test_upload of files with issues and or malware using presigned with valid jwt token
         Execution Steps:
-            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid jwt token
+            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid jwt token
+            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid jwt token
         Expected Results:
             The response message returned for file containing malware is:'OK' with success code '200'
             The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
@@ -395,7 +399,7 @@ class Test_rebuild_url(unittest.TestCase):
                 "OutputPutUrl": self.jpeg_corrupt_10kb_urls.get("OutputPutUrl"),
             },
             headers={
-                "x-api-key": self.api_key,
+                "Authorization": self.jwt_token,
             }
         )
 
