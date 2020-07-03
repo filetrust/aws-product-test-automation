@@ -16,8 +16,9 @@ class Test_rebuild_file(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         log.info(f"Setting up {cls.__name__}")
-        cls.endpoint                    = f"{os.environ['endpoint']}/file"
-        cls.api_key                     = os.environ["api_key"]
+        cls.endpoint                    = f"{os.environ['endpoint']}/api/rebuild/file"
+        cls.jwt_token                   = os.environ["jwt_token"]
+        cls.invalid_token               = os.environ["invalid_token"]
 
         cls.bmp_32kb                    = os.path.join(_ROOT, "data", "files", "under_6mb", "bmp", "bmp_32kb.bmp")
         cls.bmp_under_6mb               = os.path.join(_ROOT, "data", "files", "under_6mb", "bmp", "bmp_5.93mb.bmp")
@@ -57,7 +58,7 @@ class Test_rebuild_file(unittest.TestCase):
                     files=[("file", test_file)],
                     headers={
                         "accept": "application/octet-stream",
-                        "x-api-key": self.api_key,
+                        "Authorization": self.jwt_token,
                     },
                 )
 
@@ -69,9 +70,9 @@ class Test_rebuild_file(unittest.TestCase):
 
     def test_post___bmp_32kb___returns_status_code_200_protected_file(self):
         """
-        1Test_File submit using file endpoint & less than 6mb with valid x-api key is successful
+        1Test_File submit using file endpoint & less than 6mb with valid jwt token is successful
         Steps:
-            Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
+            Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
         Expected:
         The response is returned with the processed file & success code 200
         """
@@ -83,7 +84,7 @@ class Test_rebuild_file(unittest.TestCase):
                 files=[("file", test_file)],
                 headers={
                     "accept": "application/octet-stream",
-                    "x-api-key": self.api_key,
+                    "Authorization": self.jwt_token,
                 }
             )
 
@@ -102,9 +103,9 @@ class Test_rebuild_file(unittest.TestCase):
     @unittest.skip("6 - 10mb edge case, results in status_code 500")
     def test_post___bmp_over_6mb___returns_status_code_413(self):
         """
-        2-Test_Accurate error returned for a over 6mb file submit using file endpoint with valid x-api key
+        2-Test_Accurate error returned for a over 6mb file submit using file endpoint with valid jwt token
         Steps:
-            Post file over 6mb payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
+            Post file over 6mb payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
         Expected:
         The response message '' is returned with error code 400
         """
@@ -116,7 +117,7 @@ class Test_rebuild_file(unittest.TestCase):
                 files=[("file", test_file)],
                 headers={
                     "accept": "application/octet-stream",
-                    "x-api-key": self.api_key,
+                    "Authorization": self.jwt_token,
                 }
             )
 
@@ -126,11 +127,11 @@ class Test_rebuild_file(unittest.TestCase):
             HTTPStatus.REQUEST_ENTITY_TOO_LARGE
         )
 
-    def test_post___bmp_32kb_invalid_api_key___returns_status_code_403(self):
+    def test_post___bmp_32kb_invalid_token___returns_status_code_403(self):
         """
-        3-Test_File submit using file endpoint & less than 6mb with invalid x-api key is unsuccessful
+        3-Test_File submit using file endpoint & less than 6mb with invalid token is unsuccessful
         Steps:
-            Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with invalid x-api key
+            Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with invalid token
         Expected:
         return error code 401
         """
@@ -142,7 +143,7 @@ class Test_rebuild_file(unittest.TestCase):
                 files=[("file", test_file)],
                 headers={
                     "accept": "application/octet-stream",
-                    "x-api-key": self.api_key + "abcdef",
+                    "Authorization": self.invalid_token,
                 }
             )
 
@@ -157,7 +158,7 @@ class Test_rebuild_file(unittest.TestCase):
         4-Test_The default cmp policy is applied to submitted file using file endpoint
         Steps:
             Set cmp policy for file type as 'cmptype'
-            Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
+            Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
         Expected:
         The response is returned with success code '200'
             0) If cmpType is 'Allow', Then the file is allowed & the original file is returned
@@ -215,7 +216,7 @@ class Test_rebuild_file(unittest.TestCase):
                 files=[("file", test_file)],
                 headers={
                     "accept": "application/octet-stream",
-                    "x-api-key": self.api_key,
+                    "Authorization": self.jwt_token,
                 },
             )
 
@@ -237,7 +238,7 @@ class Test_rebuild_file(unittest.TestCase):
         4-Test_The default cmp policy is applied to submitted file using file endpoint
         Steps:
             Set cmp policy for file type as 'cmptype'
-            Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
+            Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
         Expected:
         The response is returned with success code '200'
             0) If cmpType is 'Allow', Then the file is allowed & the original file is returned
@@ -266,7 +267,7 @@ class Test_rebuild_file(unittest.TestCase):
                 files=[("file", test_file)],
                 headers={
                     "accept": "application/octet-stream",
-                    "x-api-key": self.api_key,
+                    "Authorization": self.jwt_token,
                 },
             )
 
@@ -287,7 +288,7 @@ class Test_rebuild_file(unittest.TestCase):
         4-Test_The default cmp policy is applied to submitted file using file endpoint
         Steps:
             Set cmp policy for file type as 'cmptype'
-            Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
+            Post file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
         Expected:
         The response is returned with success code '200'
             0) If cmpType is 'Allow', Then the file is allowed & the original file is returned
@@ -309,7 +310,7 @@ class Test_rebuild_file(unittest.TestCase):
                 files=[("file", test_file)],
                 headers={
                     "accept": "application/octet-stream",
-                    "x-api-key": self.api_key,
+                    "Authorization": self.jwt_token,
                 },
             )
 
@@ -330,9 +331,9 @@ class Test_rebuild_file(unittest.TestCase):
 
     def test_post___txt_1kb___returns_status_code_422(self):
         """
-        10-Test_unsupported file upload using file endpoint & less than 6mb with valid x-api key is unsuccessful
+        10-Test_unsupported file upload using file endpoint & less than 6mb with valid jwt token is unsuccessful
         Execution Steps:
-            Post a unsupported file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
+            Post a unsupported file payload request to endpoint: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
         Expected Results:
         The response message 'Unprocessable Entity' is returned with error code '422'
         """
@@ -344,7 +345,7 @@ class Test_rebuild_file(unittest.TestCase):
                 files=[("file", test_file)],
                 headers={
                     "accept": "application/octet-stream",
-                    "x-api-key": self.api_key,
+                    "Authorization": self.jwt_token,
                 },
             )
 
@@ -356,11 +357,11 @@ class Test_rebuild_file(unittest.TestCase):
 
     def test_post___xls_malware_macro_48kb___returns_status_code_200_sanitised_file(self):
         """
-        12-Test_upload of files with issues and or malware using file endpoint with valid x-api key
+        12-Test_upload of files with issues and or malware using file endpoint with valid jwt token
         Execution Steps:
-            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
-            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
-            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
+            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
+            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
+            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
         Expected Results:
         The response message returned for file containing malware is:'OK' with success code '200'
         The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
@@ -381,7 +382,7 @@ class Test_rebuild_file(unittest.TestCase):
                 files=[("file", test_file)],
                 headers={
                     "accept": "application/octet-stream",
-                    "x-api-key": self.api_key,
+                    "Authorization": self.jwt_token,
                 },
             )
 
@@ -399,11 +400,11 @@ class Test_rebuild_file(unittest.TestCase):
 
     def test_post___jpeg_corrupt_10kb___returns_status_code_422(self):
         """
-        12-Test_upload of files with issues and or malware using file endpoint with valid x-api key
+        12-Test_upload of files with issues and or malware using file endpoint with valid jwt token
         Execution Steps:
-            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
-            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
-            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/file' with valid x-api key
+            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
+            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
+            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/file' with valid jwt token
         Expected Results:
         The response message returned for file containing malware is:'OK' with success code '200'
         The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
@@ -417,7 +418,7 @@ class Test_rebuild_file(unittest.TestCase):
                 files=[("file", test_file)],
                 headers={
                     "accept": "application/octet-stream",
-                    "x-api-key": self.api_key,
+                    "Authorization": self.jwt_token,
                 },
             )
 
