@@ -8,8 +8,8 @@ from s93_test_automation import _ROOT
 import unittest
 
 
-def run(product):
-    test_directory = os.path.join(_ROOT, "integration_tests", product)
+def run(product,key_type):
+    test_directory = os.path.join(_ROOT, "integration_tests", product,key_type)
     log.debug("test_directory: %s", test_directory)
 
     # Discover tests in test_directory

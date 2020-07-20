@@ -19,11 +19,24 @@ def get_command_line_args():
         required=True
     )
     parser.add_argument(
+        "--key_type", "-k",
+        dest="key_type",
+        help="Key type used to access the endpoint. Either jwt_token or x_api_key.",
+        type=str,
+        required=True
+    )
+    parser.add_argument(
         "--endpoint", "-e",
         dest="endpoint",
         help="API Gateway endpoint URL.",
         type=str,
         required=True
+    )
+    parser.add_argument(
+        "--x_api_key", "-x",
+        dest="x_api_key",
+        help="API key to access endpoint for glasswall product.",
+        type=str
     )
     parser.add_argument(
         "--api_key", "-a",
@@ -35,17 +48,14 @@ def get_command_line_args():
     parser.add_argument(
         "--jwt_token", "-j",
         dest="jwt_token",
-        help="authorisation token to access endpoint.",
-        type=str,
-        required=True
+        help="authorisation token to access endpoint for glasswall product.",
+        type=str
     )
     parser.add_argument(
         "--invalid_token","-i",
         dest="invalid_token",
         help="invalid token that cannot acess endpoint.",
-        type=str,
-        required=True
-
+        type=str
     )
     parser.add_argument(
         "--test_files", "-t",
@@ -70,12 +80,16 @@ def get_command_line_args():
 
 def set_environment_variables(args):
     os.environ["endpoint"]      = args.endpoint
+    os.environ["key_type"]      = args.key_type
     os.environ["api_key"]       = args.api_key
     os.environ["test_files"]    = args.test_files
-    os.environ["jwt_token"]     = args.jwt_token
-    os.environ["invalid_token"] = args.invalid_token
 
-
+    if args.key_type == "jwt_token":
+        os.environ["jwt_token"]     = args.jwt_token
+        os.environ["invalid_token"] = args.invalid_token
+    elif args.key_type == "x_api_key":
+        os.environ["x_api_key"]     = args.x_api_key
+    
 def set_logging_level(level):
     logging.basicConfig(level=getattr(logging, level))
 
@@ -85,7 +99,7 @@ def main():
     set_environment_variables(args)
     set_logging_level(args.logging_level)
 
-    run_tests.run(product=args.product)
+    run_tests.run(product=args.product,key_type=args.key_type)
 
 
 if __name__ == "__main__":
