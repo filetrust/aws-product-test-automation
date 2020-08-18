@@ -87,7 +87,8 @@ class Test_rebuild_base64(unittest.TestCase):
             headers={
                 "Content-Type": "application/json",
                 "x-api-key": self.x_api_key
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -154,7 +155,8 @@ class Test_rebuild_base64(unittest.TestCase):
             headers={
                 "Content-Type": "application/json",
                 "x-api-key": ""
-            }
+            },
+            verify=False
         )
 
         # Status code should be 403, forbidden
@@ -229,7 +231,8 @@ class Test_rebuild_base64(unittest.TestCase):
             headers={
                 "Content-Type": "application/json",
                 "x-api-key": self.x_api_key
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -283,7 +286,8 @@ class Test_rebuild_base64(unittest.TestCase):
             headers={
                 "Content-Type": "application/json",
                 "x-api-key": self.x_api_key
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -329,7 +333,8 @@ class Test_rebuild_base64(unittest.TestCase):
             headers={
                 "Content-Type": "application/json",
                 "x-api-key": self.x_api_key
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -368,7 +373,8 @@ class Test_rebuild_base64(unittest.TestCase):
             headers={
                 "Content-Type": "application/json",
                 "x-api-key": self.x_api_key
-            }
+            },
+            verify=False
         )
 
         # Status code should be 422, Unprocessable Entity
@@ -402,7 +408,8 @@ class Test_rebuild_base64(unittest.TestCase):
             headers={
                 "Content-Type": "application/json",
                 "x-api-key": self.x_api_key
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, OK
@@ -443,7 +450,8 @@ class Test_rebuild_base64(unittest.TestCase):
             headers={
                 "Content-Type": "application/json",
                 "x-api-key": self.x_api_key
-            }
+            },
+            verify=False
         )
 
         # Status code should be 422, Unprocessable Entity

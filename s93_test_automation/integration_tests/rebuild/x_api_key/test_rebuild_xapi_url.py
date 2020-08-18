@@ -30,18 +30,23 @@ class Test_rebuild_url(unittest.TestCase):
         cls.bmp_over_6mb                    = os.path.join(_ROOT, "data", "files", "over_6mb", "bmp", "bmp_6.12mb.bmp")
         cls.bmp_over_6mb_urls               = get_presigned_urls(cls.bmp_over_6mb, cls.endpoint_upload, cls.endpoint_download, cls.api_key)
 
+        cls.xls_malware_macro_48kb          = os.path.join(_ROOT, "data", "files", "under_6mb", "harmless_macro", "xls", "CalcTest.xls")
+        cls.xls_malware_macro_48kb_urls     = get_presigned_urls(cls.xls_malware_macro_48kb, cls.endpoint_upload, cls.endpoint_download, cls.api_key)
+
         cls.txt_1kb                         = os.path.join(_ROOT, "data", "files", "under_6mb", "txt", "txt_1kb.txt")
         cls.txt_1kb_urls                    = get_presigned_urls(cls.txt_1kb, cls.endpoint_upload, cls.endpoint_download, cls.api_key)
 
         cls.doc_embedded_images_12kb        = os.path.join(_ROOT, "data", "files", "under_6mb", "doc", "doc_embedded_images_12kb.docx")
         cls.doc_embedded_images_12kb_urls   = get_presigned_urls(cls.doc_embedded_images_12kb, cls.endpoint_upload, cls.endpoint_download, cls.api_key)
 
-        cls.xls_malware_macro_48kb          = os.path.join(_ROOT, "data", "files", "under_6mb", "harmless_macro", "xls", "CalcTest.xls")
-        cls.xls_malware_macro_48kb_urls     = get_presigned_urls(cls.xls_malware_macro_48kb, cls.endpoint_upload, cls.endpoint_download, cls.api_key)
+        log.info("Generated up to embedded_images")
 
-        # # waiting for update to the presigned url lambda to allow files with no extension
-        # cls.jpeg_corrupt_10kb               = os.path.join(_ROOT, "data", "files", "under_6mb", "corrupt", "Corrupted_jpeg_png_mag_no")
-        # cls.jpeg_corrupt_10kb_urls          = get_presigned_urls(cls.jpeg_corrupt_10kb, cls.endpoint_upload, cls.endpoint_download, cls.api_key)
+        # cls.xls_malware_macro_48kb          = os.path.join(_ROOT, "data", "files", "under_6mb", "harmless_macro", "xls", "CalcTest.xls")
+        # cls.xls_malware_macro_48kb_urls     = get_presigned_urls(cls.xls_malware_macro_48kb, cls.endpoint_upload, cls.endpoint_download, cls.api_key)
+
+        # waiting for update to the presigned url lambda to allow files with no extension
+        cls.jpeg_corrupt_10kb               = os.path.join(_ROOT, "data", "files", "under_6mb", "corrupt", "Corrupted_jpeg_png_mag_no")
+        cls.jpeg_corrupt_10kb_urls          = get_presigned_urls(cls.jpeg_corrupt_10kb, cls.endpoint_upload, cls.endpoint_download, cls.api_key)
 
     @classmethod
     def tearDownClass(cls):
@@ -70,7 +75,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "x-api-key": self.x_api_key,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -99,7 +105,8 @@ class Test_rebuild_url(unittest.TestCase):
             json={
                 "InputGetUrl": self.bmp_32kb_urls.get("InputGetUrl"),
                 "OutputPutUrl": self.bmp_32kb_urls.get("OutputPutUrl"),
-            }
+            },
+            verify=False
         )
 
         # Status code should be 403, forbidden
@@ -125,7 +132,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "x-api-key": self.x_api_key + "abcdef",
-            }
+            },
+            verify=False
         )
 
         # Status code should be 403, forbidden
@@ -196,7 +204,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "x-api-key": self.x_api_key,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -244,7 +253,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "x-api-key": self.x_api_key,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -291,7 +301,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "x-api-key": self.x_api_key,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -323,7 +334,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "x-api-key": self.x_api_key,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 422, Unprocessable Entity
@@ -353,7 +365,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "x-api-key": self.x_api_key
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -396,7 +409,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "x-api-key": self.x_api_key,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 422, Unprocessable Entity

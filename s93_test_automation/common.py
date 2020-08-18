@@ -120,7 +120,8 @@ def get_presigned_urls(file_path: str, endpoint_upload: str, endpoint_download: 
         url=f"{endpoint_upload}/{file_name}",
         headers={
             "x-api-key": api_key
-        }
+        },
+        verify=False
     ).json()
 
     upload_url      = endpoint_upload_response.get("PresignedUrl")
@@ -136,7 +137,8 @@ def get_presigned_urls(file_path: str, endpoint_upload: str, endpoint_download: 
             data=f,
             headers={
                 "x-api-key": api_key,
-            }
+            },
+            verify=False
         )
     log.info(f"File uploaded to: {endpoint_upload_response.get('ObjectKey')}")
 
@@ -145,7 +147,8 @@ def get_presigned_urls(file_path: str, endpoint_upload: str, endpoint_download: 
         url=f"{endpoint_download}?bucketName={bucket}&objectPath={object_key}&region={region}&fileName={file_name}",
         headers={
             "x-api-key": api_key
-        }
+        },
+        verify=False
     ).json().get("PresignedUrl")
 
     file_name, extension = os.path.splitext(os.path.basename(file_path))
@@ -153,7 +156,8 @@ def get_presigned_urls(file_path: str, endpoint_upload: str, endpoint_download: 
         url=f"{endpoint_upload}/{file_name}_output{extension}",
         headers={
             "x-api-key": api_key
-        }
+        },
+        verify=False
     ).json().get("PresignedUrl")
 
     return {
