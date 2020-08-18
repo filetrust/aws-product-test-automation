@@ -43,9 +43,14 @@ class Test_rebuild_url(unittest.TestCase):
         # cls.jpeg_corrupt_10kb               = os.path.join(_ROOT, "data", "files", "under_6mb", "corrupt", "Corrupted_jpeg_png_mag_no")
         # cls.jpeg_corrupt_10kb_urls          = get_presigned_urls(cls.jpeg_corrupt_10kb, cls.endpoint_upload, cls.endpoint_download, cls.api_key)
 
+        proxy = 'http://localhost:8080/'
+        os.environ['http_proxy'] = proxy 
+        os.environ['https_proxy'] = proxy
+
     @classmethod
     def tearDownClass(cls):
-        pass
+        del os.environ['http_proxy']
+        del os.environ['https_proxy']
 
     def setUp(self):
         pass
@@ -70,7 +75,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "x-api-key": self.x_api_key,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -85,325 +91,325 @@ class Test_rebuild_url(unittest.TestCase):
             get_md5(self.bmp_32kb)
         )
 
-    def test_post___bmp_32kb_no_api_key___returns_status_code_403(self):
-        """
-        6a-Test_File submit using pre-signed url with no x-api key is unsuccessful
-        Steps:
-            Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with invalid x-api key
-        Expected:
-            The response message 'forbidden' is returned with error code '403'
-        """
-        # Send post request
-        response = requests.post(
-            url=self.endpoint,
-            json={
-                "InputGetUrl": self.bmp_32kb_urls.get("InputGetUrl"),
-                "OutputPutUrl": self.bmp_32kb_urls.get("OutputPutUrl"),
-            }
-        )
+#     def test_post___bmp_32kb_no_api_key___returns_status_code_403(self):
+#         """
+#         6a-Test_File submit using pre-signed url with no x-api key is unsuccessful
+#         Steps:
+#             Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with invalid x-api key
+#         Expected:
+#             The response message 'forbidden' is returned with error code '403'
+#         """
+#         # Send post request
+#         response = requests.post(
+#             url=self.endpoint,
+#             json={
+#                 "InputGetUrl": self.bmp_32kb_urls.get("InputGetUrl"),
+#                 "OutputPutUrl": self.bmp_32kb_urls.get("OutputPutUrl"),
+#             }
+#         )
 
-        # Status code should be 403, forbidden
-        self.assertEqual(
-            response.status_code,
-            HTTPStatus.FORBIDDEN
-        )
+#         # Status code should be 403, forbidden
+#         self.assertEqual(
+#             response.status_code,
+#             HTTPStatus.FORBIDDEN
+#         )
 
-    def test_post___bmp_32kb_invalid_api_key___returns_status_code_403(self):
-        """
-        6b-Test_File submit using pre-signed url with invalid x-api key is unsuccessful
-        Steps:
-                Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with invalid x-api key
-        Expected:
-            The response message 'forbidden' is returned with error code '403'
-        """
-        # Send post request
-        response = requests.post(
-            url=self.endpoint,
-            json={
-                "InputGetUrl": self.bmp_32kb_urls.get("InputGetUrl"),
-                "OutputPutUrl": self.bmp_32kb_urls.get("OutputPutUrl"),
-            },
-            headers={
-                "x-api-key": self.x_api_key + "abcdef",
-            }
-        )
+#     def test_post___bmp_32kb_invalid_api_key___returns_status_code_403(self):
+#         """
+#         6b-Test_File submit using pre-signed url with invalid x-api key is unsuccessful
+#         Steps:
+#                 Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with invalid x-api key
+#         Expected:
+#             The response message 'forbidden' is returned with error code '403'
+#         """
+#         # Send post request
+#         response = requests.post(
+#             url=self.endpoint,
+#             json={
+#                 "InputGetUrl": self.bmp_32kb_urls.get("InputGetUrl"),
+#                 "OutputPutUrl": self.bmp_32kb_urls.get("OutputPutUrl"),
+#             },
+#             headers={
+#                 "x-api-key": self.x_api_key + "abcdef",
+#             }
+#         )
 
-        # Status code should be 403, forbidden
-        self.assertEqual(
-            response.status_code,
-            HTTPStatus.FORBIDDEN
-        )
+#         # Status code should be 403, forbidden
+#         self.assertEqual(
+#             response.status_code,
+#             HTTPStatus.FORBIDDEN
+#         )
 
-    def test_post___doc_embedded_images_12kb_content_management_policy_allow___returns_status_code_200_identical_file(self):
-        """
-        7a-Test_The default cmp policy is applied to submitted file using pre-signed url
-        Steps:
-                Set cmp policy for file type as 'cmptype'
-                Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-        Expected:
-        The response is returned with error code '200'
-                If cmpType is 'Sanitise', Then the file is returned sanitised
-                If cmpType is 'Allow', Then the file is allowed & the original file is returned
-                If cmpType is 'Disallow', Then the file is allowed & the original file is returned
-        """
-        # Send post request
-        response = requests.post(
-            url=self.endpoint,
-            json={
-                "InputGetUrl": self.doc_embedded_images_12kb_urls.get("InputGetUrl"),
-                "OutputPutUrl": self.doc_embedded_images_12kb_urls.get("OutputPutUrl"),
-                "ContentManagementFlags": {
-                    "PdfContentManagement": {
-                        "Metadata": 0,
-                        "InternalHyperlinks": 0,
-                        "ExternalHyperlinks": 0,
-                        "EmbeddedFiles": 0,
-                        "EmbeddedImages": 0,
-                        "Javascript": 0,
-                        "Acroform": 0,
-                        "ActionsAll": 0
-                    },
-                    "ExcelContentManagement": {
-                        "Metadata": 0,
-                        "InternalHyperlinks": 0,
-                        "ExternalHyperlinks": 0,
-                        "EmbeddedFiles": 0,
-                        "EmbeddedImages": 0,
-                        "DynamicDataExchange": 0,
-                        "Macros": 0,
-                        "ReviewComments": 0
-                    },
-                    "PowerPointContentManagement": {
-                        "Metadata": 0,
-                        "InternalHyperlinks": 0,
-                        "ExternalHyperlinks": 0,
-                        "EmbeddedFiles": 0,
-                        "EmbeddedImages": 0,
-                        "Macros": 0,
-                        "ReviewComments": 0
-                    },
-                    "WordContentManagement": {
-                        "Metadata": 0,
-                        "InternalHyperlinks": 0,
-                        "ExternalHyperlinks": 0,
-                        "EmbeddedFiles": 0,
-                        "EmbeddedImages": 0,
-                        "DynamicDataExchange": 0,
-                        "Macros": 0,
-                        "ReviewComments": 0
-                    }
-                }
-            },
-            headers={
-                "x-api-key": self.x_api_key,
-            }
-        )
+#     def test_post___doc_embedded_images_12kb_content_management_policy_allow___returns_status_code_200_identical_file(self):
+#         """
+#         7a-Test_The default cmp policy is applied to submitted file using pre-signed url
+#         Steps:
+#                 Set cmp policy for file type as 'cmptype'
+#                 Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+#         Expected:
+#         The response is returned with error code '200'
+#                 If cmpType is 'Sanitise', Then the file is returned sanitised
+#                 If cmpType is 'Allow', Then the file is allowed & the original file is returned
+#                 If cmpType is 'Disallow', Then the file is allowed & the original file is returned
+#         """
+#         # Send post request
+#         response = requests.post(
+#             url=self.endpoint,
+#             json={
+#                 "InputGetUrl": self.doc_embedded_images_12kb_urls.get("InputGetUrl"),
+#                 "OutputPutUrl": self.doc_embedded_images_12kb_urls.get("OutputPutUrl"),
+#                 "ContentManagementFlags": {
+#                     "PdfContentManagement": {
+#                         "Metadata": 0,
+#                         "InternalHyperlinks": 0,
+#                         "ExternalHyperlinks": 0,
+#                         "EmbeddedFiles": 0,
+#                         "EmbeddedImages": 0,
+#                         "Javascript": 0,
+#                         "Acroform": 0,
+#                         "ActionsAll": 0
+#                     },
+#                     "ExcelContentManagement": {
+#                         "Metadata": 0,
+#                         "InternalHyperlinks": 0,
+#                         "ExternalHyperlinks": 0,
+#                         "EmbeddedFiles": 0,
+#                         "EmbeddedImages": 0,
+#                         "DynamicDataExchange": 0,
+#                         "Macros": 0,
+#                         "ReviewComments": 0
+#                     },
+#                     "PowerPointContentManagement": {
+#                         "Metadata": 0,
+#                         "InternalHyperlinks": 0,
+#                         "ExternalHyperlinks": 0,
+#                         "EmbeddedFiles": 0,
+#                         "EmbeddedImages": 0,
+#                         "Macros": 0,
+#                         "ReviewComments": 0
+#                     },
+#                     "WordContentManagement": {
+#                         "Metadata": 0,
+#                         "InternalHyperlinks": 0,
+#                         "ExternalHyperlinks": 0,
+#                         "EmbeddedFiles": 0,
+#                         "EmbeddedImages": 0,
+#                         "DynamicDataExchange": 0,
+#                         "Macros": 0,
+#                         "ReviewComments": 0
+#                     }
+#                 }
+#             },
+#             headers={
+#                 "x-api-key": self.x_api_key,
+#             }
+#         )
 
-        # Status code should be 200, ok
-        self.assertEqual(
-            response.status_code,
-            HTTPStatus.OK
-        )
+#         # Status code should be 200, ok
+#         self.assertEqual(
+#             response.status_code,
+#             HTTPStatus.OK
+#         )
 
-        # Response etag should be the same as the md5 of the input file
-        self.assertEqual(
-            ast.literal_eval(response.headers.get("gw-put-file-etag")),
-            get_md5(self.doc_embedded_images_12kb)
-        )
+#         # Response etag should be the same as the md5 of the input file
+#         self.assertEqual(
+#             ast.literal_eval(response.headers.get("gw-put-file-etag")),
+#             get_md5(self.doc_embedded_images_12kb)
+#         )
 
-    def test_post___doc_embedded_images_12kb_content_management_policy_sanitise___returns_status_code_200_sanitised_file(self):
-        """
-        7b-Test_The default cmp policy is applied to submitted file using pre-signed url
-        Steps:
-                Set cmp policy for file type as 'cmptype'
-                Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-        Expected:
-        The response is returned with error code '200'
-                If cmpType is 'Sanitise', Then the file is returned sanitised
-                If cmpType is 'Allow', Then the file is allowed & the original file is returned
-                If cmpType is 'Disallow', Then the file is allowed & the original file is returned
-        """
-        # Send post request
-        response = requests.post(
-            url=self.endpoint,
-            json={
-                "InputGetUrl": self.doc_embedded_images_12kb_urls.get("InputGetUrl"),
-                "OutputPutUrl": self.doc_embedded_images_12kb_urls.get("OutputPutUrl"),
-                "ContentManagementFlags": {
-                    "WordContentManagement": {
-                        "Metadata": 1,
-                        "InternalHyperlinks": 1,
-                        "ExternalHyperlinks": 1,
-                        "EmbeddedFiles": 1,
-                        "EmbeddedImages": 1,
-                        "DynamicDataExchange": 1,
-                        "Macros": 1,
-                        "ReviewComments": 1,
-                    },
-                },
-            },
-            headers={
-                "x-api-key": self.x_api_key,
-            }
-        )
+#     def test_post___doc_embedded_images_12kb_content_management_policy_sanitise___returns_status_code_200_sanitised_file(self):
+#         """
+#         7b-Test_The default cmp policy is applied to submitted file using pre-signed url
+#         Steps:
+#                 Set cmp policy for file type as 'cmptype'
+#                 Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+#         Expected:
+#         The response is returned with error code '200'
+#                 If cmpType is 'Sanitise', Then the file is returned sanitised
+#                 If cmpType is 'Allow', Then the file is allowed & the original file is returned
+#                 If cmpType is 'Disallow', Then the file is allowed & the original file is returned
+#         """
+#         # Send post request
+#         response = requests.post(
+#             url=self.endpoint,
+#             json={
+#                 "InputGetUrl": self.doc_embedded_images_12kb_urls.get("InputGetUrl"),
+#                 "OutputPutUrl": self.doc_embedded_images_12kb_urls.get("OutputPutUrl"),
+#                 "ContentManagementFlags": {
+#                     "WordContentManagement": {
+#                         "Metadata": 1,
+#                         "InternalHyperlinks": 1,
+#                         "ExternalHyperlinks": 1,
+#                         "EmbeddedFiles": 1,
+#                         "EmbeddedImages": 1,
+#                         "DynamicDataExchange": 1,
+#                         "Macros": 1,
+#                         "ReviewComments": 1,
+#                     },
+#                 },
+#             },
+#             headers={
+#                 "x-api-key": self.x_api_key,
+#             }
+#         )
 
-        # Status code should be 200, ok
-        self.assertEqual(
-            response.status_code,
-            HTTPStatus.OK
-        )
+#         # Status code should be 200, ok
+#         self.assertEqual(
+#             response.status_code,
+#             HTTPStatus.OK
+#         )
 
-        # Response etag should be different to the md5 of the input file
-        self.assertNotEqual(
-            ast.literal_eval(response.headers.get("gw-put-file-etag")),
-            get_md5(self.doc_embedded_images_12kb)
-        )
+#         # Response etag should be different to the md5 of the input file
+#         self.assertNotEqual(
+#             ast.literal_eval(response.headers.get("gw-put-file-etag")),
+#             get_md5(self.doc_embedded_images_12kb)
+#         )
 
-        # etag should match expected md5
-        self.assertEqual(
-            ast.literal_eval(response.headers.get("gw-put-file-etag")),
-            "665f3d263d7fe25b7491cbeec657abb0"
-        )
+#         # etag should match expected md5
+#         self.assertEqual(
+#             ast.literal_eval(response.headers.get("gw-put-file-etag")),
+#             "665f3d263d7fe25b7491cbeec657abb0"
+#         )
 
-    def test_post___doc_embedded_images_12kb_content_management_policy_disallow___returns_status_code_200_disallowed_json(self):
-        """
-        7c-Test_The default cmp policy is applied to submitted file using pre-signed url
-        Steps:
-            Set cmp policy for file type as 'cmptype'
-            Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-        Expected:
-            The response is returned with error code '200'
-                If cmpType is 'Sanitise', Then the file is returned sanitised
-                If cmpType is 'Allow', Then the file is allowed & the original file is returned
-                If cmpType is 'Disallow', Then the file is allowed & the original file is returned
-        """
-        # Send post request
-        response = requests.post(
-            url=self.endpoint,
-            json={
-                "InputGetUrl": self.doc_embedded_images_12kb_urls.get("InputGetUrl"),
-                "OutputPutUrl": self.doc_embedded_images_12kb_urls.get("OutputPutUrl"),
-                "ContentManagementFlags": {
-                    "WordContentManagement": {
-                        "EmbeddedImages": 2,
-                    },
-                },
-            },
-            headers={
-                "x-api-key": self.x_api_key,
-            }
-        )
+#     def test_post___doc_embedded_images_12kb_content_management_policy_disallow___returns_status_code_200_disallowed_json(self):
+#         """
+#         7c-Test_The default cmp policy is applied to submitted file using pre-signed url
+#         Steps:
+#             Set cmp policy for file type as 'cmptype'
+#             Post a file payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+#         Expected:
+#             The response is returned with error code '200'
+#                 If cmpType is 'Sanitise', Then the file is returned sanitised
+#                 If cmpType is 'Allow', Then the file is allowed & the original file is returned
+#                 If cmpType is 'Disallow', Then the file is allowed & the original file is returned
+#         """
+#         # Send post request
+#         response = requests.post(
+#             url=self.endpoint,
+#             json={
+#                 "InputGetUrl": self.doc_embedded_images_12kb_urls.get("InputGetUrl"),
+#                 "OutputPutUrl": self.doc_embedded_images_12kb_urls.get("OutputPutUrl"),
+#                 "ContentManagementFlags": {
+#                     "WordContentManagement": {
+#                         "EmbeddedImages": 2,
+#                     },
+#                 },
+#             },
+#             headers={
+#                 "x-api-key": self.x_api_key,
+#             }
+#         )
 
-        # Status code should be 200, ok
-        self.assertEqual(
-            response.status_code,
-            HTTPStatus.OK
-        )
+#         # Status code should be 200, ok
+#         self.assertEqual(
+#             response.status_code,
+#             HTTPStatus.OK
+#         )
 
-        # JSON should have an errorMessage key
-        self.assertTrue("errorMessage" in response.json().keys())
+#         # JSON should have an errorMessage key
+#         self.assertTrue("errorMessage" in response.json().keys())
 
-        # JSON should have isDisallowed key with value True
-        self.assertTrue(response.json().get("isDisallowed"))
+#         # JSON should have isDisallowed key with value True
+#         self.assertTrue(response.json().get("isDisallowed"))
 
-    def test_post___txt_1kb___returns_status_code_422(self):
-        """
-        9-Test_unsupported file upload using pre-signed url with valid x-api key is unsuccessful
-        Execution Steps:
-                Post a payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-        Expected Results:
-            The response message 'Unprocessable Entity' is returned with error code '422'
-        """
-        # Send post request
-        response = requests.post(
-            url=self.endpoint,
-            json={
-                "InputGetUrl": self.txt_1kb_urls.get("InputGetUrl"),
-                "OutputPutUrl": self.txt_1kb_urls.get("OutputPutUrl"),
-            },
-            headers={
-                "x-api-key": self.x_api_key,
-            }
-        )
+#     def test_post___txt_1kb___returns_status_code_422(self):
+#         """
+#         9-Test_unsupported file upload using pre-signed url with valid x-api key is unsuccessful
+#         Execution Steps:
+#                 Post a payload request with file url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+#         Expected Results:
+#             The response message 'Unprocessable Entity' is returned with error code '422'
+#         """
+#         # Send post request
+#         response = requests.post(
+#             url=self.endpoint,
+#             json={
+#                 "InputGetUrl": self.txt_1kb_urls.get("InputGetUrl"),
+#                 "OutputPutUrl": self.txt_1kb_urls.get("OutputPutUrl"),
+#             },
+#             headers={
+#                 "x-api-key": self.x_api_key,
+#             }
+#         )
 
-        # Status code should be 422, Unprocessable Entity
-        self.assertEqual(
-            response.status_code,
-            HTTPStatus.UNPROCESSABLE_ENTITY
-        )
+#         # Status code should be 422, Unprocessable Entity
+#         self.assertEqual(
+#             response.status_code,
+#             HTTPStatus.UNPROCESSABLE_ENTITY
+#         )
 
-    def test_post___xls_malware_macro_48kb___returns_status_code_200_sanitised_file(self):
-        """
-        11a-Test_upload of files with issues and or malware using presigned with valid x-api key
-        Execution Steps:
-            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-        Expected Results:
-            The response message returned for file containing malware is:'OK' with success code '200'
-            The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
-            The response message returned for file containing malware is: 'Unprocessable Entity' with error code '422'
-        """
-        # Send post request
-        response = requests.post(
-            url=self.endpoint,
-            json={
-                "InputGetUrl": self.xls_malware_macro_48kb_urls.get("InputGetUrl"),
-                "OutputPutUrl": self.xls_malware_macro_48kb_urls.get("OutputPutUrl"),
-            },
-            headers={
-                "x-api-key": self.x_api_key
-            }
-        )
+#     def test_post___xls_malware_macro_48kb___returns_status_code_200_sanitised_file(self):
+#         """
+#         11a-Test_upload of files with issues and or malware using presigned with valid x-api key
+#         Execution Steps:
+#             Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+#             Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+#             Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+#         Expected Results:
+#             The response message returned for file containing malware is:'OK' with success code '200'
+#             The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
+#             The response message returned for file containing malware is: 'Unprocessable Entity' with error code '422'
+#         """
+#         # Send post request
+#         response = requests.post(
+#             url=self.endpoint,
+#             json={
+#                 "InputGetUrl": self.xls_malware_macro_48kb_urls.get("InputGetUrl"),
+#                 "OutputPutUrl": self.xls_malware_macro_48kb_urls.get("OutputPutUrl"),
+#             },
+#             headers={
+#                 "x-api-key": self.x_api_key
+#             }
+#         )
 
-        # Status code should be 200, ok
-        self.assertEqual(
-            response.status_code,
-            HTTPStatus.OK
-        )
+#         # Status code should be 200, ok
+#         self.assertEqual(
+#             response.status_code,
+#             HTTPStatus.OK
+#         )
 
-        # Response etag should be different to the md5 of the input file
-        self.assertNotEqual(
-            ast.literal_eval(response.headers.get("gw-put-file-etag")),
-            get_md5(self.xls_malware_macro_48kb)
-        )
+#         # Response etag should be different to the md5 of the input file
+#         self.assertNotEqual(
+#             ast.literal_eval(response.headers.get("gw-put-file-etag")),
+#             get_md5(self.xls_malware_macro_48kb)
+#         )
 
-        # etag should match expected md5
-        self.assertEqual(
-            ast.literal_eval(response.headers.get("gw-put-file-etag")),
-            "4b6ef99d2932fd735a4eed1c1ca236ee"
-        )
+#         # etag should match expected md5
+#         self.assertEqual(
+#             ast.literal_eval(response.headers.get("gw-put-file-etag")),
+#             "4b6ef99d2932fd735a4eed1c1ca236ee"
+#         )
 
-    @unittest.skip("waiting for update to the presigned url lambda to allow files with no extension")
-    def test_post___jpeg_corrupt_10kb___returns_status_code_422(self):
-        """
-        11b-Test_upload of files with issues and or malware using presigned with valid x-api key
-        Execution Steps:
-            Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-            Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-            Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
-        Expected Results:
-            The response message returned for file containing malware is:'OK' with success code '200'
-            The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
-            The response message returned for file containing malware is: 'Unprocessable Entity' with error code '422'
-        """
-        # Send post request
-        response = requests.post(
-            url=self.endpoint,
-            json={
-                "InputGetUrl": self.jpeg_corrupt_10kb_urls.get("InputGetUrl"),
-                "OutputPutUrl": self.jpeg_corrupt_10kb_urls.get("OutputPutUrl"),
-            },
-            headers={
-                "x-api-key": self.x_api_key,
-            }
-        )
+#     @unittest.skip("waiting for update to the presigned url lambda to allow files with no extension")
+#     def test_post___jpeg_corrupt_10kb___returns_status_code_422(self):
+#         """
+#         11b-Test_upload of files with issues and or malware using presigned with valid x-api key
+#         Execution Steps:
+#             Post a payload request with file containing malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+#             Post a payload request with file containing structural issues to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+#             Post a payload request with file containing issues and malware to url: '[API GATEWAY URL]/api/Rebuild/sas' with valid x-api key
+#         Expected Results:
+#             The response message returned for file containing malware is:'OK' with success code '200'
+#             The response message returned for file containing structural issues is: 'Unprocessable Entity' with error code '422'
+#             The response message returned for file containing malware is: 'Unprocessable Entity' with error code '422'
+#         """
+#         # Send post request
+#         response = requests.post(
+#             url=self.endpoint,
+#             json={
+#                 "InputGetUrl": self.jpeg_corrupt_10kb_urls.get("InputGetUrl"),
+#                 "OutputPutUrl": self.jpeg_corrupt_10kb_urls.get("OutputPutUrl"),
+#             },
+#             headers={
+#                 "x-api-key": self.x_api_key,
+#             }
+#         )
 
-        # Status code should be 422, Unprocessable Entity
-        self.assertEqual(
-            response.status_code,
-            HTTPStatus.UNPROCESSABLE_ENTITY
-        )
+#         # Status code should be 422, Unprocessable Entity
+#         self.assertEqual(
+#             response.status_code,
+#             HTTPStatus.UNPROCESSABLE_ENTITY
+#         )
 
 
 if __name__ == "__main__":
