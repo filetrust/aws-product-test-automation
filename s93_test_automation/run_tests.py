@@ -12,14 +12,6 @@ def run(product,key_type):
     test_directory = os.path.join(_ROOT, "integration_tests", product,key_type)
     log.debug("test_directory: %s", test_directory)
 
-    proxy = 'http://localhost:8080/'
-
-    os.environ['http_proxy'] = proxy 
-    os.environ['HTTP_PROXY'] = proxy
-    os.environ['https_proxy'] = proxy
-    os.environ['HTTPS_PROXY'] = proxy
-
-
     # Discover tests in test_directory
     try:
         suite = unittest.TestLoader().discover(test_directory)

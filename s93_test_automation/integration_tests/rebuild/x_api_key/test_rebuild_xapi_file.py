@@ -58,7 +58,6 @@ class Test_rebuild_file(unittest.TestCase):
                         "accept": "application/octet-stream",
                         "x-api-key": self.x_api_key,
                     },
-                    verify=False
                 )
 
             # Status code should be 200, ok
@@ -84,8 +83,7 @@ class Test_rebuild_file(unittest.TestCase):
                 headers={
                     "accept": "application/octet-stream",
                     "x-api-key": self.x_api_key,
-                },
-                verify=False
+                }
             )
 
         # Status code should be 200, ok
@@ -118,8 +116,7 @@ class Test_rebuild_file(unittest.TestCase):
                 headers={
                     "accept": "application/octet-stream",
                     "x-api-key": self.x_api_key,
-                },
-                verify=False
+                }
             )
 
         # Status code should be 413, Payload Too Large
@@ -145,8 +142,7 @@ class Test_rebuild_file(unittest.TestCase):
                 headers={
                     "accept": "application/octet-stream",
                     "x-api-key": self.x_api_key + "abcdef",
-                },
-                verify=False
+                }
             )
 
         # Status code should be 403, forbidden
@@ -220,7 +216,6 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "x-api-key": self.x_api_key,
                 },
-                verify=False
             )
 
         # Status code should be 200, ok
@@ -272,7 +267,6 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "x-api-key": self.x_api_key,
                 },
-                verify=False
             )
 
         # Status code should be 200, ok
@@ -316,7 +310,6 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "x-api-key": self.x_api_key,
                 },
-                verify=False
             )
 
         # Status code should be 200, ok
@@ -352,7 +345,6 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "x-api-key": self.x_api_key,
                 },
-                verify=False
             )
 
         # Status code should be 422, Unprocessable Entity
@@ -390,7 +382,6 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "x-api-key": self.x_api_key,
                 },
-                verify=False                            
             )
 
         # Status code should be 200, OK
@@ -427,7 +418,6 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "x-api-key": self.x_api_key,
                 },
-                verify=False
             )
 
         # Status code should be 422, Unprocessable Entity
