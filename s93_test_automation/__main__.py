@@ -74,6 +74,12 @@ def get_command_line_args():
         nargs="?",
         choices=("NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
     )
+    parser.add_argument(
+        "--zap_api_key", "-z",
+        dest="zap_api_key",
+        help="API key to access endpoint for zappier.",
+        type=str,
+    )
 
     return parser.parse_args()
 
@@ -83,6 +89,7 @@ def set_environment_variables(args):
     os.environ["key_type"]      = args.key_type
     os.environ["api_key"]       = args.api_key
     os.environ["test_files"]    = args.test_files
+    os.environ["zap_api_key"]   = args.zap_api_key
 
     if args.key_type == "jwt_token":
         os.environ["jwt_token"]     = args.jwt_token

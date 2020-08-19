@@ -41,9 +41,10 @@ s93_test_automation --product "PRODUCT" --key_type "x_api_key" --endpoint "ENDPO
 | ---------------- | :---: | :-------: | :- |
 | --product        | -p    | Required  | *(str)* Name of a product corresponding to a directory in [s93_test_automation/integration_tests](https://github.com/filetrust/aws-product-test-automation/tree/master/s93_test_automation/integration_tests).<br>e.g. `"rebuild"` |
 | --endpoint       | -e    | Required  | *(str)* API Gateway product endpoint url.<br> e.g. `"https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/Rebuild"` |
-| --key_type        | -k    | Required  | *(str)* What type of access key is being used.<br>e.g. `"x_api_key" or "jwt_token"` |
+| --key_type       | -k    | Required  | *(str)* What type of access key is being used.<br>e.g. `"x_api_key" or "jwt_token"` |
 | --api_key        | -a    | Required  | *(str)* An AWS API key that grants access to the presigned url generator.<br>e.g. `"a612ciXevo7FM9UKlkaj2D27s6u7Nieb6K2z9929d"` |
 | --x_api_key      | -x    | Optional  | *(str)* An AWS API key that grants access to the endpoint specified as well as other Glasswall product endpoints.<br>e.g. `"a612ciXevo7FM9UKlkaj2D27s6u7Nieb6K2z9929d"` |
+| --zap_api_key    | -z    | Optional  | *(str)* An API key that grants access to the zap endpoint.<br>e.g. `"a612ciXevo7FM9UKlkaj2D27s6u7Nieb6K2z9929d"` |
 | --jwt_token      | -j    | Optional  | *(str)* An authorization token that grants access to the endpoint specified.<br>e.g. `"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTUwMDE3MDIsImV4cCI6..."` |
 | --invalid_token  | -i    | Optional  | *(str)* An invalid version of the jwt_token that will not grant access to the endpoint specified .<br>e.g. `"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTUwMDE3MDIsImV4cCI6..."` |
 | --test_files     | -t    | Optional  | **This functionality is currently disabled.**<br>*(str)* A directory containing external files to perform basic status code tests on. Defaults to `s93_test_automation/data/files/external`  |
