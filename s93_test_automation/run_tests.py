@@ -1,13 +1,13 @@
 
 
+import json
 import logging
 log = logging.getLogger("glasswall")
 import os
+import requests
 import sys
 from s93_test_automation import _ROOT
 import unittest
-import requests
-import json
 
 
 def run(product,key_type):

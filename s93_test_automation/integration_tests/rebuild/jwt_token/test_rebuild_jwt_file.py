@@ -32,9 +32,15 @@ class Test_rebuild_file(unittest.TestCase):
 
         cls.jpeg_corrupt_10kb           = os.path.join(_ROOT, "data", "files", "under_6mb", "corrupt", "Corrupted_jpeg_png_mag_no")
 
+        proxy = 'http://localhost:8080/'
+
+        os.environ['http_proxy'] = proxy 
+        os.environ['https_proxy'] = proxy
+
     @classmethod
     def tearDownClass(cls):
-        pass
+        del os.environ['http_proxy']
+        del os.environ['https_proxy']
 
     def setUp(self):
         pass
@@ -60,6 +66,7 @@ class Test_rebuild_file(unittest.TestCase):
                         "accept": "application/octet-stream",
                         "Authorization": self.jwt_token,
                     },
+                    verify=False
                 )
 
             # Status code should be 200, ok
@@ -85,7 +92,8 @@ class Test_rebuild_file(unittest.TestCase):
                 headers={
                     "accept": "application/octet-stream",
                     "Authorization": self.jwt_token,
-                }
+                },
+                verify=False
             )
 
         # Status code should be 200, ok
@@ -118,7 +126,8 @@ class Test_rebuild_file(unittest.TestCase):
                 headers={
                     "accept": "application/octet-stream",
                     "Authorization": self.jwt_token,
-                }
+                },
+                verify=False
             )
 
         # Status code should be 413, Payload Too Large
@@ -144,7 +153,8 @@ class Test_rebuild_file(unittest.TestCase):
                 headers={
                     "accept": "application/octet-stream",
                     "Authorization": self.invalid_token,
-                }
+                },
+                verify=False
             )
 
         # Status code should be 403, forbidden
@@ -218,6 +228,7 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "Authorization": self.jwt_token,
                 },
+                verify=False
             )
 
         # Status code should be 200, ok
@@ -269,6 +280,7 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "Authorization": self.jwt_token,
                 },
+                verify=False
             )
 
         # Status code should be 200, ok
@@ -312,6 +324,7 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "Authorization": self.jwt_token,
                 },
+                verify=False
             )
 
         # Status code should be 200, ok
@@ -347,6 +360,7 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "Authorization": self.jwt_token,
                 },
+                verify=False
             )
 
         # Status code should be 422, Unprocessable Entity
@@ -384,6 +398,7 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "Authorization": self.jwt_token,
                 },
+                verify=False
             )
 
         # Status code should be 200, OK
@@ -420,6 +435,7 @@ class Test_rebuild_file(unittest.TestCase):
                     "accept": "application/octet-stream",
                     "Authorization": self.jwt_token,
                 },
+                verify=False
             )
 
         # Status code should be 422, Unprocessable Entity

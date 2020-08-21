@@ -45,9 +45,15 @@ class Test_rebuild_url(unittest.TestCase):
         # cls.jpeg_corrupt_10kb               = os.path.join(_ROOT, "data", "files", "under_6mb", "corrupt", "Corrupted_jpeg_png_mag_no")
         # cls.jpeg_corrupt_10kb_urls          = get_presigned_urls(cls.jpeg_corrupt_10kb, cls.endpoint_upload, cls.endpoint_download, cls.api_key)
 
+        proxy = 'http://localhost:8080/'
+
+        os.environ['http_proxy'] = proxy 
+        os.environ['https_proxy'] = proxy
+
     @classmethod
     def tearDownClass(cls):
-        pass
+        del os.environ['http_proxy']
+        del os.environ['https_proxy']
 
     def setUp(self):
         pass
@@ -72,7 +78,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "Authorization": self.jwt_token,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -101,7 +108,8 @@ class Test_rebuild_url(unittest.TestCase):
             json={
                 "InputGetUrl": self.bmp_32kb_urls.get("InputGetUrl"),
                 "OutputPutUrl": self.bmp_32kb_urls.get("OutputPutUrl"),
-            }
+            },
+            verify=False
         )
 
         # Status code should be 401, unauthorized
@@ -128,7 +136,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "Authorization": self.invalid_token,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 403, forbidden
@@ -200,7 +209,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "Authorization": self.jwt_token,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -248,7 +258,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "Authorization": self.jwt_token,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -295,7 +306,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "Authorization": self.jwt_token,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -327,7 +339,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "Authorization": self.jwt_token,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 422, Unprocessable Entity
@@ -357,7 +370,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "Authorization": self.jwt_token
-            }
+            },
+            verify=False
         )
 
         # Status code should be 200, ok
@@ -400,7 +414,8 @@ class Test_rebuild_url(unittest.TestCase):
             },
             headers={
                 "Authorization": self.jwt_token,
-            }
+            },
+            verify=False
         )
 
         # Status code should be 422, Unprocessable Entity

@@ -1,8 +1,9 @@
-import sys
-import requests
 import json
-import unittest
 import logging
+import os
+import requests
+import sys
+import unittest
 
 class Test_rebuild_security(unittest.TestCase):
   @classmethod
@@ -29,7 +30,6 @@ class Test_rebuild_security(unittest.TestCase):
       }
     ).json()
 
-    ## Retrive
     High=response['High']
 
     self.assertEqual(
